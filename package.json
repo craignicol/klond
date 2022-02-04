@@ -38,21 +38,5 @@
   },
   "dependencies": {
     "sirv-cli": "^2.0.0"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "transform": {
-      "^.+\\.svelte$": "svelte-jester"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "svelte"
-    ],
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-dom/extend-expect"
-    ],
-    "globals": {
-      "ts-jest": {}
-    }
   }
 }

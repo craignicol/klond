@@ -2,9 +2,17 @@
   "compilerOptions": {
     "types": [
       "node",
-      "jest"
+      "jest",
+      "svelte"
     ],
-    "outDir": "./dist"
+    "outDir": "./dist/",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "sourceMap": true,
   },
   "extends": "@tsconfig/svelte/tsconfig.json",
   "include": [
@@ -13,6 +21,7 @@
   ],
   "exclude": [
     "node_modules/*",
+    "dist",
     "__sapper__/*",
     "public/*"
   ]
