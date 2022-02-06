@@ -8,7 +8,7 @@
     "start": "sirv public --no-clear --port 5001 --single",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "jest src",
-    "test:watch": "npm run test -- --watch",
+    "test:watch": "npm run test -- --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.17.0",
