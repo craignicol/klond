@@ -54,7 +54,9 @@ export function Sample(percent: number): Letter {
 }
 
 export function Shuffle(seed: number): Letter[] {
-  const deck = [...Array(52).keys()].map(i => (i % 26) as Letter);
-  console.log(frequencies.reduce((acc, curr) => acc + curr, 0));
+  const deck = [...Array(52).keys()];
+  for (let i = 0; i < deck.length; ++i) {
+    deck[i] = Sample(Math.random() * 100);
+  }
   return deck;
 }

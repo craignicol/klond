@@ -108,3 +108,9 @@ test("sampling is correct", () => {
   expect(Sample(99)).toBe(Letter.Y);
   expect(Sample(100)).toBe(Letter.Z);
 });
+
+test('Multiple runs are different', () => {
+  console.log(Shuffle(1));
+  console.log(Shuffle(2));
+  expect(Shuffle(1)).not.toBe(Shuffle(2));
+});
