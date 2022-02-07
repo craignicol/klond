@@ -487,7 +487,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			attr_dev(span, "class", "front svelte-1nv0dta");
+    			attr_dev(span, "class", "front svelte-xqz29z");
     			add_location(span, file$1, 8, 0, 163);
     		},
     		m: function mount(target, anchor) {
@@ -521,7 +521,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			span.textContent = ".";
-    			attr_dev(span, "class", "back svelte-1nv0dta");
+    			attr_dev(span, "class", "back svelte-xqz29z");
     			add_location(span, file$1, 6, 0, 125);
     		},
     		m: function mount(target, anchor) {
@@ -671,7 +671,7 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[2] = list[i];
+    	child_ctx[1] = list[i];
     	return child_ctx;
     }
 
@@ -682,7 +682,7 @@ var app = (function () {
 
     	card = new Card({
     			props: {
-    				face: /*c*/ ctx[2],
+    				face: /*c*/ ctx[1],
     				turned: Math.random() > 0.5
     			},
     			$$inline: true
@@ -698,7 +698,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const card_changes = {};
-    			if (dirty & /*deck*/ 2) card_changes.face = /*c*/ ctx[2];
+    			if (dirty & /*deck*/ 1) card_changes.face = /*c*/ ctx[1];
     			card.$set(card_changes);
     		},
     		i: function intro(local) {
@@ -729,17 +729,16 @@ var app = (function () {
     function create_fragment(ctx) {
     	let main;
     	let h1;
-    	let t0;
     	let t1;
-    	let t2;
+    	let p0;
     	let t3;
-    	let p;
+    	let p1;
     	let t4;
     	let a;
     	let t6;
     	let t7;
     	let current;
-    	let each_value = /*deck*/ ctx[1];
+    	let each_value = /*deck*/ ctx[0];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -755,15 +754,16 @@ var app = (function () {
     		c: function create() {
     			main = element("main");
     			h1 = element("h1");
-    			t0 = text("Hello ");
-    			t1 = text(/*name*/ ctx[0]);
-    			t2 = text("!");
+    			h1.textContent = "Klond";
+    			t1 = space();
+    			p0 = element("p");
+    			p0.textContent = "Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.";
     			t3 = space();
-    			p = element("p");
+    			p1 = element("p");
     			t4 = text("Visit the ");
     			a = element("a");
-    			a.textContent = "Svelte tutorial";
-    			t6 = text(" to learn how to build Svelte apps.");
+    			a.textContent = "Klond tutorial";
+    			t6 = text(" to find out more.");
     			t7 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -771,12 +771,13 @@ var app = (function () {
     			}
 
     			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 6, 1, 111);
-    			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 7, 14, 149);
-    			add_location(p, file, 7, 1, 136);
+    			add_location(h1, file, 5, 1, 93);
+    			add_location(p0, file, 6, 1, 110);
+    			attr_dev(a, "href", "https://craignicol.github.io/klond/#howtoplay");
+    			add_location(a, file, 7, 14, 252);
+    			add_location(p1, file, 7, 1, 239);
     			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 5, 0, 102);
+    			add_location(main, file, 4, 0, 84);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -784,14 +785,13 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
     			append_dev(main, h1);
-    			append_dev(h1, t0);
-    			append_dev(h1, t1);
-    			append_dev(h1, t2);
+    			append_dev(main, t1);
+    			append_dev(main, p0);
     			append_dev(main, t3);
-    			append_dev(main, p);
-    			append_dev(p, t4);
-    			append_dev(p, a);
-    			append_dev(p, t6);
+    			append_dev(main, p1);
+    			append_dev(p1, t4);
+    			append_dev(p1, a);
+    			append_dev(p1, t6);
     			append_dev(main, t7);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -801,10 +801,8 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*name*/ 1) set_data_dev(t1, /*name*/ ctx[0]);
-
-    			if (dirty & /*deck, Math*/ 2) {
-    				each_value = /*deck*/ ctx[1];
+    			if (dirty & /*deck, Math*/ 1) {
+    				each_value = /*deck*/ ctx[0];
     				validate_each_argument(each_value);
     				let i;
 
@@ -869,37 +867,34 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
-    	let { name } = $$props;
     	let { deck } = $$props;
-    	const writable_props = ['name', 'deck'];
+    	const writable_props = ['deck'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
-    		if ('name' in $$props) $$invalidate(0, name = $$props.name);
-    		if ('deck' in $$props) $$invalidate(1, deck = $$props.deck);
+    		if ('deck' in $$props) $$invalidate(0, deck = $$props.deck);
     	};
 
-    	$$self.$capture_state = () => ({ Card, name, deck });
+    	$$self.$capture_state = () => ({ Card, deck });
 
     	$$self.$inject_state = $$props => {
-    		if ('name' in $$props) $$invalidate(0, name = $$props.name);
-    		if ('deck' in $$props) $$invalidate(1, deck = $$props.deck);
+    		if ('deck' in $$props) $$invalidate(0, deck = $$props.deck);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [name, deck];
+    	return [deck];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { name: 0, deck: 1 });
+    		init(this, options, instance, create_fragment, safe_not_equal, { deck: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -911,21 +906,9 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*name*/ ctx[0] === undefined && !('name' in props)) {
-    			console.warn("<App> was created without expected prop 'name'");
-    		}
-
-    		if (/*deck*/ ctx[1] === undefined && !('deck' in props)) {
+    		if (/*deck*/ ctx[0] === undefined && !('deck' in props)) {
     			console.warn("<App> was created without expected prop 'deck'");
     		}
-    	}
-
-    	get name() {
-    		throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set name(value) {
-    		throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get deck() {

@@ -2,14 +2,13 @@
 import Card from "./Card.svelte";
 import type { Letter } from "./deck";
 
-
-	export let name: string;
 	export let deck: Letter[];
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<h1>Klond</h1>
+	<p>Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
+	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more.</p>
 
 	{#each deck as c}
 		<Card face={c} turned={Math.random() > 0.5} />

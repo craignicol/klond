@@ -27,15 +27,25 @@ import { Letter } from "./deck";
     color: white;
     text-align: center;
     line-height: 5em;
+    border-radius: 0.5em;
   }
   span.back {
     background: repeating-linear-gradient(
-    45deg,
-    rgba(62, 26, 26, 0.5),
-    rgba(49, 1, 1, 0.5) 1px,
-	transparent 1px,
-	transparent 5px
-  );
+        45deg,
+        rgba(62, 26, 26, 0.5),
+        rgba(49, 1, 1, 0.5) 1px,
+      transparent 1px,
+      transparent 3px
+      );
+    z-index: 1;
+  }
+  span.front {
+    background: radial-gradient(
+      circle,
+      rgba(51, 3, 3, 0.5) 0%,
+      rgba(51, 3, 3, 0.5) 80%,
+      rgba(228, 9, 9, 0.5) 100%
+    );
     z-index: 1;
   }
 </style>
