@@ -487,7 +487,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			attr_dev(span, "class", "front svelte-xqz29z");
+    			attr_dev(span, "class", "front svelte-365tzq");
     			add_location(span, file$1, 8, 0, 163);
     		},
     		m: function mount(target, anchor) {
@@ -521,7 +521,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			span.textContent = ".";
-    			attr_dev(span, "class", "back svelte-xqz29z");
+    			attr_dev(span, "class", "back svelte-365tzq");
     			add_location(span, file$1, 6, 0, 125);
     		},
     		m: function mount(target, anchor) {

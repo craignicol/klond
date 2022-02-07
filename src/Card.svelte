@@ -23,7 +23,7 @@ import { Letter } from "./deck";
     z-index: -1;
     font-size: 2em;
     font-weight: bold;
-    font-family: "Dyslexie", "Comic Sans MS", cursive, sans-serif;
+    font-family: "OpenDyslexic3", "OpenDyslexic2", "Dyslexie", "Comic Sans MS", cursive, sans-serif;
     color: white;
     text-align: center;
     line-height: 5em;
