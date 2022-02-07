@@ -1,1 +1,7 @@
-main.svelte-1tky8bj{text-align:center;padding:1em;max-width:240px;margin:0 auto}h1.svelte-1tky8bj{color:#ff3e00;text-transform:uppercase;font-size:4em;font-weight:100}@media(min-width: 640px){main.svelte-1tky8bj{max-width:none}}
+main.svelte-1tky8bj{text-align:center;padding:1em;max-width:240px;margin:0 auto}h1.svelte-1tky8bj{color:#ff3e00;text-transform:uppercase;font-size:4em;font-weight:100}@media(min-width: 640px){main.svelte-1tky8bj{max-width:none}}span.svelte-1nv0dta{display:inline-block;width:3em;height:5em;background:rgb(165, 30, 30);padding:0.1em;margin:0.3em;opacity:1;z-index:-1;font-size:2em;font-weight:bold;font-family:"Dyslexie", "Comic Sans MS", cursive, sans-serif;color:white;text-align:center;line-height:5em}span.back.svelte-1nv0dta{background:repeating-linear-gradient(
+    45deg,
+    rgba(62, 26, 26, 0.5),
+    rgba(49, 1, 1, 0.5) 1px,
+	transparent 1px,
+	transparent 5px
+  );z-index:1}
