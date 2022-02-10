@@ -8,7 +8,7 @@
   {#each currentWord as c}
   <Card face={c} /> 
   {:else}
-  <Card face={Letter.Q} turned /> <span class="shelf-text">Drag cards here to make words</span>
+  <Card face={Letter.Q} turned /> <span class="shelf-text">Click or drag cards here to make words</span>
   {/each}
   {#if currentWord.length >= 3}
   <button class="shelf-text">Submit</button>

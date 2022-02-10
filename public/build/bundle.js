@@ -54,6 +54,10 @@ var app = (function () {
     function empty() {
         return text('');
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -73,6 +77,16 @@ var app = (function () {
     function set_current_component(component) {
         current_component = component;
     }
+    // TODO figure out if we still want to support
+    // shorthand events, or if we want to implement
+    // a real bubbling mechanism
+    function bubble(component, event) {
+        const callbacks = component.$$.callbacks[event.type];
+        if (callbacks) {
+            // @ts-ignore
+            callbacks.slice().forEach(fn => fn.call(this, event));
+        }
+    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -88,6 +102,9 @@ var app = (function () {
     }
     function add_render_callback(fn) {
         render_callbacks.push(fn);
+    }
+    function add_flush_callback(fn) {
+        flush_callbacks.push(fn);
     }
     // flush() calls callbacks in this order:
     // 1. All beforeUpdate callbacks, in order: parents before children
@@ -190,6 +207,14 @@ var app = (function () {
                 }
             });
             block.o(local);
+        }
+    }
+
+    function bind(component, name, callback) {
+        const index = component.$$.props[name];
+        if (index !== undefined) {
+            component.$$.bound[index] = callback;
+            callback(component.$$.ctx[index]);
         }
     }
     function create_component(block) {
@@ -335,6 +360,19 @@ var app = (function () {
     function detach_dev(node) {
         dispatch_dev('SvelteDOMRemove', { node });
         detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
     }
     function attr_dev(node, attribute, value) {
         attr(node, attribute, value);
@@ -482,6 +520,8 @@ var app = (function () {
     	let span;
     	let t_value = Letter[/*face*/ ctx[0]] + "";
     	let t;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
@@ -493,12 +533,19 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
     			append_dev(span, t);
+
+    			if (!mounted) {
+    				dispose = listen_dev(span, "click", /*click_handler*/ ctx[2], false, false, false);
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*face*/ 1 && t_value !== (t_value = Letter[/*face*/ ctx[0]] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(span);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -610,6 +657,10 @@ var app = (function () {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Card> was created with unknown prop '${key}'`);
     	});
 
+    	function click_handler(event) {
+    		bubble.call(this, $$self, event);
+    	}
+
     	$$self.$$set = $$props => {
     		if ('face' in $$props) $$invalidate(0, face = $$props.face);
     		if ('turned' in $$props) $$invalidate(1, turned = $$props.turned);
@@ -626,7 +677,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [face, turned];
+    	return [face, turned, click_handler];
     }
 
     class Card extends SvelteComponentDev {
@@ -692,7 +743,7 @@ var app = (function () {
     			create_component(card.$$.fragment);
     			t0 = space();
     			span = element("span");
-    			span.textContent = "Drag cards here to make words";
+    			span.textContent = "Click or drag cards here to make words";
     			attr_dev(span, "class", "shelf-text svelte-1wyt6kg");
     			add_location(span, file$1, 9, 34, 238);
     		},
@@ -787,7 +838,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "shelf-text svelte-1wyt6kg");
-    			add_location(button, file$1, 12, 2, 347);
+    			add_location(button, file$1, 12, 2, 356);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -853,7 +904,7 @@ var app = (function () {
     			attr_dev(div, "id", "shelf");
     			attr_dev(div, "class", "svelte-1wyt6kg");
     			add_location(div, file$1, 5, 0, 125);
-    			add_location(hr, file$1, 16, 0, 410);
+    			add_location(hr, file$1, 16, 0, 419);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1032,22 +1083,29 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[2] = list[i];
+    	child_ctx[5] = list[i];
+    	child_ctx[7] = i;
     	return child_ctx;
     }
 
-    // (16:1) {#each deck as c}
+    // (20:1) {#each deck as c, i}
     function create_each_block(ctx) {
     	let card;
     	let current;
 
+    	function click_handler(...args) {
+    		return /*click_handler*/ ctx[4](/*c*/ ctx[5], /*i*/ ctx[7], ...args);
+    	}
+
     	card = new Card({
     			props: {
-    				face: /*c*/ ctx[2],
+    				face: /*c*/ ctx[5],
     				turned: Math.random() > 0.5
     			},
     			$$inline: true
     		});
+
+    	card.$on("click", click_handler);
 
     	const block = {
     		c: function create() {
@@ -1057,9 +1115,10 @@ var app = (function () {
     			mount_component(card, target, anchor);
     			current = true;
     		},
-    		p: function update(ctx, dirty) {
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
     			const card_changes = {};
-    			if (dirty & /*deck*/ 1) card_changes.face = /*c*/ ctx[2];
+    			if (dirty & /*deck*/ 2) card_changes.face = /*c*/ ctx[5];
     			card.$set(card_changes);
     		},
     		i: function intro(local) {
@@ -1080,7 +1139,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(16:1) {#each deck as c}",
+    		source: "(20:1) {#each deck as c, i}",
     		ctx
     	});
 
@@ -1100,16 +1159,27 @@ var app = (function () {
     	let a;
     	let t8;
     	let t9;
-    	let shelf;
+    	let p3;
     	let t10;
+    	let t11;
+    	let shelf;
+    	let updating_currentWord;
+    	let t12;
     	let current;
 
-    	shelf = new Shelf({
-    			props: { currentWord: /*selected*/ ctx[1] },
-    			$$inline: true
-    		});
+    	function shelf_currentWord_binding(value) {
+    		/*shelf_currentWord_binding*/ ctx[3](value);
+    	}
 
-    	let each_value = /*deck*/ ctx[0];
+    	let shelf_props = {};
+
+    	if (/*selected*/ ctx[0] !== void 0) {
+    		shelf_props.currentWord = /*selected*/ ctx[0];
+    	}
+
+    	shelf = new Shelf({ props: shelf_props, $$inline: true });
+    	binding_callbacks.push(() => bind(shelf, 'currentWord', shelf_currentWord_binding));
+    	let each_value = /*deck*/ ctx[1];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -1139,24 +1209,28 @@ var app = (function () {
     			a.textContent = "Klond tutorial";
     			t8 = text(" to find out more.");
     			t9 = space();
+    			p3 = element("p");
+    			t10 = text(/*selected*/ ctx[0]);
+    			t11 = space();
     			create_component(shelf.$$.fragment);
-    			t10 = space();
+    			t12 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
     			attr_dev(h1, "class", "svelte-1a8f4c2");
-    			add_location(h1, file, 8, 1, 249);
+    			add_location(h1, file, 11, 1, 250);
     			attr_dev(p0, "class", "instructions svelte-1a8f4c2");
-    			add_location(p0, file, 9, 1, 266);
+    			add_location(p0, file, 12, 1, 267);
     			attr_dev(p1, "class", "instructions svelte-1a8f4c2");
-    			add_location(p1, file, 10, 1, 416);
+    			add_location(p1, file, 13, 1, 417);
     			attr_dev(a, "href", "https://craignicol.github.io/klond/#howtoplay");
-    			add_location(a, file, 11, 14, 522);
-    			add_location(p2, file, 11, 1, 509);
+    			add_location(a, file, 14, 14, 523);
+    			add_location(p2, file, 14, 1, 510);
+    			add_location(p3, file, 15, 1, 622);
     			attr_dev(main, "class", "svelte-1a8f4c2");
-    			add_location(main, file, 7, 0, 240);
+    			add_location(main, file, 10, 0, 241);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1174,8 +1248,11 @@ var app = (function () {
     			append_dev(p2, a);
     			append_dev(p2, t8);
     			append_dev(main, t9);
+    			append_dev(main, p3);
+    			append_dev(p3, t10);
+    			append_dev(main, t11);
     			mount_component(shelf, main, null);
-    			append_dev(main, t10);
+    			append_dev(main, t12);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(main, null);
@@ -1184,12 +1261,19 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*selected*/ 1) set_data_dev(t10, /*selected*/ ctx[0]);
     			const shelf_changes = {};
-    			if (dirty & /*selected*/ 2) shelf_changes.currentWord = /*selected*/ ctx[1];
+
+    			if (!updating_currentWord && dirty & /*selected*/ 1) {
+    				updating_currentWord = true;
+    				shelf_changes.currentWord = /*selected*/ ctx[0];
+    				add_flush_callback(() => updating_currentWord = false);
+    			}
+
     			shelf.$set(shelf_changes);
 
-    			if (dirty & /*deck, Math*/ 1) {
-    				each_value = /*deck*/ ctx[0];
+    			if (dirty & /*deck, Math, selectCard*/ 6) {
+    				each_value = /*deck*/ ctx[1];
     				validate_each_argument(each_value);
     				let i;
 
@@ -1258,36 +1342,49 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
     	let { deck } = $$props;
-    	let { selected = [Letter.Q, Letter.U, Letter.E, Letter.U, Letter.E, Letter.R] } = $$props;
+    	let { selected = [] } = $$props;
+
+    	function selectCard(card, index) {
+    		selected.push(card);
+    		deck.splice(index, 1);
+    	}
+
     	const writable_props = ['deck', 'selected'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
+    	function shelf_currentWord_binding(value) {
+    		selected = value;
+    		$$invalidate(0, selected);
+    	}
+
+    	const click_handler = (c, i, _) => selectCard(c, i);
+
     	$$self.$$set = $$props => {
-    		if ('deck' in $$props) $$invalidate(0, deck = $$props.deck);
-    		if ('selected' in $$props) $$invalidate(1, selected = $$props.selected);
+    		if ('deck' in $$props) $$invalidate(1, deck = $$props.deck);
+    		if ('selected' in $$props) $$invalidate(0, selected = $$props.selected);
     	};
 
-    	$$self.$capture_state = () => ({ Card, Letter, Shelf, deck, selected });
+    	$$self.$capture_state = () => ({ Card, Shelf, deck, selected, selectCard });
 
     	$$self.$inject_state = $$props => {
-    		if ('deck' in $$props) $$invalidate(0, deck = $$props.deck);
-    		if ('selected' in $$props) $$invalidate(1, selected = $$props.selected);
+    		if ('deck' in $$props) $$invalidate(1, deck = $$props.deck);
+    		if ('selected' in $$props) $$invalidate(0, selected = $$props.selected);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [deck, selected];
+    	return [selected, deck, selectCard, shelf_currentWord_binding, click_handler];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { deck: 0, selected: 1 });
+    		init(this, options, instance, create_fragment, safe_not_equal, { deck: 1, selected: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1299,7 +1396,7 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*deck*/ ctx[0] === undefined && !('deck' in props)) {
+    		if (/*deck*/ ctx[1] === undefined && !('deck' in props)) {
     			console.warn("<App> was created without expected prop 'deck'");
     		}
     	}

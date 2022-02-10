@@ -8,7 +8,7 @@ import { Letter } from "./deck";
 {#if turned}
 <span class="card back">&nbsp;</span>
 {:else}
-<span class="card front">{Letter[face]}</span>
+<span class="card front" on:click>{Letter[face]}</span>
 {/if}
 
 <style>

@@ -1,10 +1,15 @@
 <script lang="ts">
 import Card from "./Card.svelte";
-import { Letter } from "./deck";
+import type { Letter } from "./deck";
 import Shelf from "./Shelf.svelte";
 
 	export let deck: Letter[];
-	export let selected: Letter[] = [Letter.Q, Letter.U, Letter.E, Letter.U, Letter.E, Letter.R];
+	export let selected: Letter[] = [];
+
+	function selectCard(card: Letter, index: number) {
+		selected.push(card);
+		deck.splice(index, 1);
+	}
 </script>
 
 <main>
@@ -12,11 +17,12 @@ import Shelf from "./Shelf.svelte";
 	<p class="instructions">Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
 	<p class="instructions">Words must be at least 3 letters. US and UK spellings allowed.</p>
 	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more.</p>
+	<p>{selected}</p>
 
-	<Shelf currentWord={selected}/>
+	<Shelf bind:currentWord={selected}/>
 
-	{#each deck as c}
-		<Card face={c} turned={Math.random() > 0.5} />
+	{#each deck as c, i}
+		<Card face={c} turned={Math.random() > 0.5} on:click={_ => selectCard(c, i)}/>
 	{/each}
 </main>
 
