@@ -6,13 +6,13 @@ import { Letter } from "./deck";
 </script>
 
 {#if turned}
-<span class="back">.</span>
+<span class="card back">&nbsp;</span>
 {:else}
-<span class="front">{Letter[face]}</span>
+<span class="card front">{Letter[face]}</span>
 {/if}
 
 <style>
-  span {
+  span.card {
     display: inline-block;
     width: 3em;
     height: 5em;
@@ -23,13 +23,12 @@ import { Letter } from "./deck";
     z-index: -1;
     font-size: 2em;
     font-weight: bold;
-    font-family: "OpenDyslexic3", "OpenDyslexic2", "Dyslexie", "Comic Sans MS", cursive, sans-serif;
     color: white;
     text-align: center;
     line-height: 5em;
     border-radius: 0.5em;
   }
-  span.back {
+  span.card.back {
     background: repeating-linear-gradient(
         45deg,
         rgba(62, 26, 26, 0.5),
@@ -39,7 +38,7 @@ import { Letter } from "./deck";
       );
     z-index: 1;
   }
-  span.front {
+  span.card.front {
     background: radial-gradient(
       circle,
       rgba(51, 3, 3, 0.5) 0%,
