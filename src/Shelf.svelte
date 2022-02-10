@@ -12,6 +12,8 @@
   {/each}
   {#if currentWord.length >= 3}
   <button class="shelf-text">Submit</button>
+  {:else if currentWord.length > 0}
+  <span class="shelf-text">Drag 3 cards to make a word</span>
   {/if}
 </div>
 

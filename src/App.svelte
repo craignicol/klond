@@ -1,14 +1,14 @@
 <script lang="ts">
 import Card from "./Card.svelte";
-import type { Letter } from "./deck";
+import { Letter } from "./deck";
 import Shelf from "./Shelf.svelte";
 
 	export let deck: Letter[];
 	export let selected: Letter[] = [];
 
 	function selectCard(card: Letter, index: number) {
-		selected.push(card);
-		deck.splice(index, 1);
+		selected = [...selected, card];
+		deck = deck.filter((_, i) => i !== index);
 	}
 </script>
 
@@ -17,7 +17,7 @@ import Shelf from "./Shelf.svelte";
 	<p class="instructions">Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
 	<p class="instructions">Words must be at least 3 letters. US and UK spellings allowed.</p>
 	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more.</p>
-	<p>{selected}</p>
+	<p class="hidden">{#each selected as l}{Letter[l]}{:else}~~No selected letters~~{/each}</p>
 
 	<Shelf bind:currentWord={selected}/>
 
@@ -46,6 +46,11 @@ import Shelf from "./Shelf.svelte";
 		font-size: 1.2em;
 		margin-bottom: 1em;
 	}
+
+	p.hidden {
+		display: none;
+	}
+	
 	@media (min-width: 640px) {
 		main {
 			max-width: none;

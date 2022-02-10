@@ -516,7 +516,7 @@ var app = (function () {
     const file$2 = "src\\Card.svelte";
 
     // (8:0) {:else}
-    function create_else_block$1(ctx) {
+    function create_else_block$2(ctx) {
     	let span;
     	let t_value = Letter[/*face*/ ctx[0]] + "";
     	let t;
@@ -551,7 +551,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$1.name,
+    		id: create_else_block$2.name,
     		type: "else",
     		source: "(8:0) {:else}",
     		ctx
@@ -596,7 +596,7 @@ var app = (function () {
 
     	function select_block_type(ctx, dirty) {
     		if (/*turned*/ ctx[1]) return create_if_block$1;
-    		return create_else_block$1;
+    		return create_else_block$2;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -727,7 +727,7 @@ var app = (function () {
     }
 
     // (9:2) {:else}
-    function create_else_block(ctx) {
+    function create_else_block$1(ctx) {
     	let card;
     	let t0;
     	let span;
@@ -772,7 +772,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block$1.name,
     		type: "else",
     		source: "(9:2) {:else}",
     		ctx
@@ -823,6 +823,36 @@ var app = (function () {
     		id: create_each_block$1.name,
     		type: "each",
     		source: "(7:2) {#each currentWord as c}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (14:35) 
+    function create_if_block_1(ctx) {
+    	let span;
+
+    	const block = {
+    		c: function create() {
+    			span = element("span");
+    			span.textContent = "Drag 3 cards to make a word";
+    			attr_dev(span, "class", "shelf-text svelte-1wyt6kg");
+    			add_location(span, file$1, 14, 2, 439);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, span, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(span);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(14:35) ",
     		ctx
     	});
 
@@ -880,10 +910,16 @@ var app = (function () {
     	let each_1_else = null;
 
     	if (!each_value.length) {
-    		each_1_else = create_else_block(ctx);
+    		each_1_else = create_else_block$1(ctx);
     	}
 
-    	let if_block = /*currentWord*/ ctx[0].length >= 3 && create_if_block(ctx);
+    	function select_block_type(ctx, dirty) {
+    		if (/*currentWord*/ ctx[0].length >= 3) return create_if_block;
+    		if (/*currentWord*/ ctx[0].length > 0) return create_if_block_1;
+    	}
+
+    	let current_block_type = select_block_type(ctx);
+    	let if_block = current_block_type && current_block_type(ctx);
 
     	const block = {
     		c: function create() {
@@ -904,7 +940,7 @@ var app = (function () {
     			attr_dev(div, "id", "shelf");
     			attr_dev(div, "class", "svelte-1wyt6kg");
     			add_location(div, file$1, 5, 0, 125);
-    			add_location(hr, file$1, 16, 0, 419);
+    			add_location(hr, file$1, 18, 0, 519);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -957,7 +993,7 @@ var app = (function () {
     				if (!each_value.length && each_1_else) {
     					each_1_else.p(ctx, dirty);
     				} else if (!each_value.length) {
-    					each_1_else = create_else_block(ctx);
+    					each_1_else = create_else_block$1(ctx);
     					each_1_else.c();
     					transition_in(each_1_else, 1);
     					each_1_else.m(div, t0);
@@ -972,15 +1008,14 @@ var app = (function () {
     				}
     			}
 
-    			if (/*currentWord*/ ctx[0].length >= 3) {
-    				if (if_block) ; else {
-    					if_block = create_if_block(ctx);
+    			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
+    				if (if_block) if_block.d(1);
+    				if_block = current_block_type && current_block_type(ctx);
+
+    				if (if_block) {
     					if_block.c();
     					if_block.m(div, null);
     				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
     			}
     		},
     		i: function intro(local) {
@@ -1005,7 +1040,11 @@ var app = (function () {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
     			if (each_1_else) each_1_else.d();
-    			if (if_block) if_block.d();
+
+    			if (if_block) {
+    				if_block.d();
+    			}
+
     			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(hr);
     		}
@@ -1088,7 +1127,71 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (20:1) {#each deck as c, i}
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[8] = list[i];
+    	return child_ctx;
+    }
+
+    // (17:51) {:else}
+    function create_else_block(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("~~No selected letters~~");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(17:51) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (17:19) {#each selected as l}
+    function create_each_block_1(ctx) {
+    	let t_value = Letter[/*l*/ ctx[8]] + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*selected*/ 2 && t_value !== (t_value = Letter[/*l*/ ctx[8]] + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(17:19) {#each selected as l}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (21:1) {#each deck as c, i}
     function create_each_block(ctx) {
     	let card;
     	let current;
@@ -1118,7 +1221,7 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
     			const card_changes = {};
-    			if (dirty & /*deck*/ 2) card_changes.face = /*c*/ ctx[5];
+    			if (dirty & /*deck*/ 1) card_changes.face = /*c*/ ctx[5];
     			card.$set(card_changes);
     		},
     		i: function intro(local) {
@@ -1139,7 +1242,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(20:1) {#each deck as c, i}",
+    		source: "(21:1) {#each deck as c, i}",
     		ctx
     	});
 
@@ -1161,11 +1264,23 @@ var app = (function () {
     	let t9;
     	let p3;
     	let t10;
-    	let t11;
     	let shelf;
     	let updating_currentWord;
-    	let t12;
+    	let t11;
     	let current;
+    	let each_value_1 = /*selected*/ ctx[1];
+    	validate_each_argument(each_value_1);
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	let each0_else = null;
+
+    	if (!each_value_1.length) {
+    		each0_else = create_else_block(ctx);
+    	}
 
     	function shelf_currentWord_binding(value) {
     		/*shelf_currentWord_binding*/ ctx[3](value);
@@ -1173,13 +1288,13 @@ var app = (function () {
 
     	let shelf_props = {};
 
-    	if (/*selected*/ ctx[0] !== void 0) {
-    		shelf_props.currentWord = /*selected*/ ctx[0];
+    	if (/*selected*/ ctx[1] !== void 0) {
+    		shelf_props.currentWord = /*selected*/ ctx[1];
     	}
 
     	shelf = new Shelf({ props: shelf_props, $$inline: true });
     	binding_callbacks.push(() => bind(shelf, 'currentWord', shelf_currentWord_binding));
-    	let each_value = /*deck*/ ctx[1];
+    	let each_value = /*deck*/ ctx[0];
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -1210,27 +1325,36 @@ var app = (function () {
     			t8 = text(" to find out more.");
     			t9 = space();
     			p3 = element("p");
-    			t10 = text(/*selected*/ ctx[0]);
-    			t11 = space();
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			if (each0_else) {
+    				each0_else.c();
+    			}
+
+    			t10 = space();
     			create_component(shelf.$$.fragment);
-    			t12 = space();
+    			t11 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(h1, "class", "svelte-1a8f4c2");
-    			add_location(h1, file, 11, 1, 250);
-    			attr_dev(p0, "class", "instructions svelte-1a8f4c2");
-    			add_location(p0, file, 12, 1, 267);
-    			attr_dev(p1, "class", "instructions svelte-1a8f4c2");
-    			add_location(p1, file, 13, 1, 417);
+    			attr_dev(h1, "class", "svelte-1kokrhk");
+    			add_location(h1, file, 12, 1, 315);
+    			attr_dev(p0, "class", "instructions svelte-1kokrhk");
+    			add_location(p0, file, 13, 1, 332);
+    			attr_dev(p1, "class", "instructions svelte-1kokrhk");
+    			add_location(p1, file, 14, 1, 482);
     			attr_dev(a, "href", "https://craignicol.github.io/klond/#howtoplay");
-    			add_location(a, file, 14, 14, 523);
-    			add_location(p2, file, 14, 1, 510);
-    			add_location(p3, file, 15, 1, 622);
-    			attr_dev(main, "class", "svelte-1a8f4c2");
-    			add_location(main, file, 10, 0, 241);
+    			add_location(a, file, 15, 14, 588);
+    			add_location(p2, file, 15, 1, 575);
+    			attr_dev(p3, "class", "hidden svelte-1kokrhk");
+    			add_location(p3, file, 16, 1, 687);
+    			attr_dev(main, "class", "svelte-1kokrhk");
+    			add_location(main, file, 11, 0, 306);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1249,10 +1373,18 @@ var app = (function () {
     			append_dev(p2, t8);
     			append_dev(main, t9);
     			append_dev(main, p3);
-    			append_dev(p3, t10);
-    			append_dev(main, t11);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(p3, null);
+    			}
+
+    			if (each0_else) {
+    				each0_else.m(p3, null);
+    			}
+
+    			append_dev(main, t10);
     			mount_component(shelf, main, null);
-    			append_dev(main, t12);
+    			append_dev(main, t11);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(main, null);
@@ -1261,19 +1393,53 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*selected*/ 1) set_data_dev(t10, /*selected*/ ctx[0]);
+    			if (dirty & /*Letter, selected*/ 2) {
+    				each_value_1 = /*selected*/ ctx[1];
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks_1[i] = create_each_block_1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(p3, null);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+
+    				each_blocks_1.length = each_value_1.length;
+
+    				if (each_value_1.length) {
+    					if (each0_else) {
+    						each0_else.d(1);
+    						each0_else = null;
+    					}
+    				} else if (!each0_else) {
+    					each0_else = create_else_block(ctx);
+    					each0_else.c();
+    					each0_else.m(p3, null);
+    				}
+    			}
+
     			const shelf_changes = {};
 
-    			if (!updating_currentWord && dirty & /*selected*/ 1) {
+    			if (!updating_currentWord && dirty & /*selected*/ 2) {
     				updating_currentWord = true;
-    				shelf_changes.currentWord = /*selected*/ ctx[0];
+    				shelf_changes.currentWord = /*selected*/ ctx[1];
     				add_flush_callback(() => updating_currentWord = false);
     			}
 
     			shelf.$set(shelf_changes);
 
-    			if (dirty & /*deck, Math, selectCard*/ 6) {
-    				each_value = /*deck*/ ctx[1];
+    			if (dirty & /*deck, Math, selectCard*/ 5) {
+    				each_value = /*deck*/ ctx[0];
     				validate_each_argument(each_value);
     				let i;
 
@@ -1322,6 +1488,8 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
+    			destroy_each(each_blocks_1, detaching);
+    			if (each0_else) each0_else.d();
     			destroy_component(shelf);
     			destroy_each(each_blocks, detaching);
     		}
@@ -1345,8 +1513,8 @@ var app = (function () {
     	let { selected = [] } = $$props;
 
     	function selectCard(card, index) {
-    		selected.push(card);
-    		deck.splice(index, 1);
+    		$$invalidate(1, selected = [...selected, card]);
+    		$$invalidate(0, deck = deck.filter((_, i) => i !== index));
     	}
 
     	const writable_props = ['deck', 'selected'];
@@ -1357,34 +1525,41 @@ var app = (function () {
 
     	function shelf_currentWord_binding(value) {
     		selected = value;
-    		$$invalidate(0, selected);
+    		$$invalidate(1, selected);
     	}
 
     	const click_handler = (c, i, _) => selectCard(c, i);
 
     	$$self.$$set = $$props => {
-    		if ('deck' in $$props) $$invalidate(1, deck = $$props.deck);
-    		if ('selected' in $$props) $$invalidate(0, selected = $$props.selected);
+    		if ('deck' in $$props) $$invalidate(0, deck = $$props.deck);
+    		if ('selected' in $$props) $$invalidate(1, selected = $$props.selected);
     	};
 
-    	$$self.$capture_state = () => ({ Card, Shelf, deck, selected, selectCard });
+    	$$self.$capture_state = () => ({
+    		Card,
+    		Letter,
+    		Shelf,
+    		deck,
+    		selected,
+    		selectCard
+    	});
 
     	$$self.$inject_state = $$props => {
-    		if ('deck' in $$props) $$invalidate(1, deck = $$props.deck);
-    		if ('selected' in $$props) $$invalidate(0, selected = $$props.selected);
+    		if ('deck' in $$props) $$invalidate(0, deck = $$props.deck);
+    		if ('selected' in $$props) $$invalidate(1, selected = $$props.selected);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [selected, deck, selectCard, shelf_currentWord_binding, click_handler];
+    	return [deck, selected, selectCard, shelf_currentWord_binding, click_handler];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { deck: 1, selected: 0 });
+    		init(this, options, instance, create_fragment, safe_not_equal, { deck: 0, selected: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -1396,7 +1571,7 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || {};
 
-    		if (/*deck*/ ctx[1] === undefined && !('deck' in props)) {
+    		if (/*deck*/ ctx[0] === undefined && !('deck' in props)) {
     			console.warn("<App> was created without expected prop 'deck'");
     		}
     	}
