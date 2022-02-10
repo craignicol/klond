@@ -1259,14 +1259,15 @@ var app = (function () {
     	let t5;
     	let p2;
     	let t6;
-    	let a;
+    	let a0;
     	let t8;
-    	let t9;
-    	let p3;
+    	let a1;
     	let t10;
+    	let p3;
+    	let t11;
     	let shelf;
     	let updating_currentWord;
-    	let t11;
+    	let t12;
     	let current;
     	let each_value_1 = /*selected*/ ctx[1];
     	validate_each_argument(each_value_1);
@@ -1320,10 +1321,12 @@ var app = (function () {
     			t5 = space();
     			p2 = element("p");
     			t6 = text("Visit the ");
-    			a = element("a");
-    			a.textContent = "Klond tutorial";
-    			t8 = text(" to find out more.");
-    			t9 = space();
+    			a0 = element("a");
+    			a0.textContent = "Klond tutorial";
+    			t8 = text(" to find out more. ");
+    			a1 = element("a");
+    			a1.textContent = "The word list is taken from Github";
+    			t10 = space();
     			p3 = element("p");
 
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
@@ -1334,26 +1337,28 @@ var app = (function () {
     				each0_else.c();
     			}
 
-    			t10 = space();
-    			create_component(shelf.$$.fragment);
     			t11 = space();
+    			create_component(shelf.$$.fragment);
+    			t12 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			attr_dev(h1, "class", "svelte-1kokrhk");
+    			attr_dev(h1, "class", "svelte-8x0s3h");
     			add_location(h1, file, 12, 1, 315);
-    			attr_dev(p0, "class", "instructions svelte-1kokrhk");
+    			attr_dev(p0, "class", "instructions svelte-8x0s3h");
     			add_location(p0, file, 13, 1, 332);
-    			attr_dev(p1, "class", "instructions svelte-1kokrhk");
+    			attr_dev(p1, "class", "instructions svelte-8x0s3h");
     			add_location(p1, file, 14, 1, 482);
-    			attr_dev(a, "href", "https://craignicol.github.io/klond/#howtoplay");
-    			add_location(a, file, 15, 14, 588);
+    			attr_dev(a0, "href", "https://craignicol.github.io/klond/#howtoplay");
+    			add_location(a0, file, 15, 14, 588);
+    			attr_dev(a1, "href", "https://github.com/dwyl/english-words");
+    			add_location(a1, file, 15, 107, 681);
     			add_location(p2, file, 15, 1, 575);
-    			attr_dev(p3, "class", "hidden svelte-1kokrhk");
-    			add_location(p3, file, 16, 1, 687);
-    			attr_dev(main, "class", "svelte-1kokrhk");
+    			attr_dev(p3, "class", "hidden svelte-8x0s3h");
+    			add_location(p3, file, 16, 1, 774);
+    			attr_dev(main, "class", "svelte-8x0s3h");
     			add_location(main, file, 11, 0, 306);
     		},
     		l: function claim(nodes) {
@@ -1369,9 +1374,10 @@ var app = (function () {
     			append_dev(main, t5);
     			append_dev(main, p2);
     			append_dev(p2, t6);
-    			append_dev(p2, a);
+    			append_dev(p2, a0);
     			append_dev(p2, t8);
-    			append_dev(main, t9);
+    			append_dev(p2, a1);
+    			append_dev(main, t10);
     			append_dev(main, p3);
 
     			for (let i = 0; i < each_blocks_1.length; i += 1) {
@@ -1382,9 +1388,9 @@ var app = (function () {
     				each0_else.m(p3, null);
     			}
 
-    			append_dev(main, t10);
-    			mount_component(shelf, main, null);
     			append_dev(main, t11);
+    			mount_component(shelf, main, null);
+    			append_dev(main, t12);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(main, null);

@@ -16,7 +16,7 @@ import Shelf from "./Shelf.svelte";
 	<h1>Klond</h1>
 	<p class="instructions">Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
 	<p class="instructions">Words must be at least 3 letters. US and UK spellings allowed.</p>
-	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more.</p>
+	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more. <a href="https://github.com/dwyl/english-words">The word list is taken from Github</a></p>
 	<p class="hidden">{#each selected as l}{Letter[l]}{:else}~~No selected letters~~{/each}</p>
 
 	<Shelf bind:currentWord={selected}/>
@@ -50,7 +50,7 @@ import Shelf from "./Shelf.svelte";
 	p.hidden {
 		display: none;
 	}
-	
+
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
