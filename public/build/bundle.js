@@ -487,7 +487,7 @@ var app = (function () {
     		c: function create() {
     			span = element("span");
     			t = text(t_value);
-    			attr_dev(span, "class", "card front svelte-5trcxx");
+    			attr_dev(span, "class", "card front svelte-4kr4bn");
     			add_location(span, file$2, 8, 0, 173);
     		},
     		m: function mount(target, anchor) {
@@ -514,14 +514,14 @@ var app = (function () {
     }
 
     // (6:0) {#if turned}
-    function create_if_block(ctx) {
+    function create_if_block$1(ctx) {
     	let span;
 
     	const block = {
     		c: function create() {
     			span = element("span");
     			span.textContent = " ";
-    			attr_dev(span, "class", "card back svelte-5trcxx");
+    			attr_dev(span, "class", "card back svelte-4kr4bn");
     			add_location(span, file$2, 6, 0, 125);
     		},
     		m: function mount(target, anchor) {
@@ -535,7 +535,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block.name,
+    		id: create_if_block$1.name,
     		type: "if",
     		source: "(6:0) {#if turned}",
     		ctx
@@ -548,7 +548,7 @@ var app = (function () {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*turned*/ ctx[1]) return create_if_block;
+    		if (/*turned*/ ctx[1]) return create_if_block$1;
     		return create_else_block$1;
     	}
 
@@ -693,8 +693,8 @@ var app = (function () {
     			t0 = space();
     			span = element("span");
     			span.textContent = "Drag cards here to make words";
-    			attr_dev(span, "class", "shelf-help svelte-6tcryk");
-    			add_location(span, file$1, 9, 34, 237);
+    			attr_dev(span, "class", "shelf-text svelte-1wyt6kg");
+    			add_location(span, file$1, 9, 34, 238);
     		},
     		m: function mount(target, anchor) {
     			mount_component(card, target, anchor);
@@ -778,9 +778,40 @@ var app = (function () {
     	return block;
     }
 
+    // (12:2) {#if currentWord.length >= 3}
+    function create_if_block(ctx) {
+    	let button;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "Submit";
+    			attr_dev(button, "class", "shelf-text svelte-1wyt6kg");
+    			add_location(button, file$1, 12, 2, 347);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(12:2) {#if currentWord.length >= 3}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$1(ctx) {
     	let div;
-    	let t;
+    	let t0;
+    	let t1;
     	let hr;
     	let current;
     	let each_value = /*currentWord*/ ctx[0];
@@ -801,6 +832,8 @@ var app = (function () {
     		each_1_else = create_else_block(ctx);
     	}
 
+    	let if_block = /*currentWord*/ ctx[0].length >= 3 && create_if_block(ctx);
+
     	const block = {
     		c: function create() {
     			div = element("div");
@@ -813,12 +846,14 @@ var app = (function () {
     				each_1_else.c();
     			}
 
-    			t = space();
+    			t0 = space();
+    			if (if_block) if_block.c();
+    			t1 = space();
     			hr = element("hr");
     			attr_dev(div, "id", "shelf");
-    			attr_dev(div, "class", "svelte-6tcryk");
+    			attr_dev(div, "class", "svelte-1wyt6kg");
     			add_location(div, file$1, 5, 0, 125);
-    			add_location(hr, file$1, 13, 0, 321);
+    			add_location(hr, file$1, 16, 0, 410);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -834,7 +869,9 @@ var app = (function () {
     				each_1_else.m(div, null);
     			}
 
-    			insert_dev(target, t, anchor);
+    			append_dev(div, t0);
+    			if (if_block) if_block.m(div, null);
+    			insert_dev(target, t1, anchor);
     			insert_dev(target, hr, anchor);
     			current = true;
     		},
@@ -854,7 +891,7 @@ var app = (function () {
     						each_blocks[i] = create_each_block$1(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(div, null);
+    						each_blocks[i].m(div, t0);
     					}
     				}
 
@@ -872,7 +909,7 @@ var app = (function () {
     					each_1_else = create_else_block(ctx);
     					each_1_else.c();
     					transition_in(each_1_else, 1);
-    					each_1_else.m(div, null);
+    					each_1_else.m(div, t0);
     				} else if (each_1_else) {
     					group_outros();
 
@@ -882,6 +919,17 @@ var app = (function () {
 
     					check_outros();
     				}
+    			}
+
+    			if (/*currentWord*/ ctx[0].length >= 3) {
+    				if (if_block) ; else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					if_block.m(div, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
     			}
     		},
     		i: function intro(local) {
@@ -906,7 +954,8 @@ var app = (function () {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
     			if (each_1_else) each_1_else.d();
-    			if (detaching) detach_dev(t);
+    			if (if_block) if_block.d();
+    			if (detaching) detach_dev(t1);
     			if (detaching) detach_dev(hr);
     		}
     	};
@@ -987,7 +1036,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (15:1) {#each deck as c}
+    // (16:1) {#each deck as c}
     function create_each_block(ctx) {
     	let card;
     	let current;
@@ -1031,7 +1080,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(15:1) {#each deck as c}",
+    		source: "(16:1) {#each deck as c}",
     		ctx
     	});
 
@@ -1045,12 +1094,14 @@ var app = (function () {
     	let p0;
     	let t3;
     	let p1;
-    	let t4;
-    	let a;
+    	let t5;
+    	let p2;
     	let t6;
-    	let t7;
-    	let shelf;
+    	let a;
     	let t8;
+    	let t9;
+    	let shelf;
+    	let t10;
     	let current;
 
     	shelf = new Shelf({
@@ -1080,27 +1131,32 @@ var app = (function () {
     			p0.textContent = "Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.";
     			t3 = space();
     			p1 = element("p");
-    			t4 = text("Visit the ");
+    			p1.textContent = "Words must be at least 3 letters. US and UK spellings allowed.";
+    			t5 = space();
+    			p2 = element("p");
+    			t6 = text("Visit the ");
     			a = element("a");
     			a.textContent = "Klond tutorial";
-    			t6 = text(" to find out more.");
-    			t7 = space();
+    			t8 = text(" to find out more.");
+    			t9 = space();
     			create_component(shelf.$$.fragment);
-    			t8 = space();
+    			t10 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
     			attr_dev(h1, "class", "svelte-1a8f4c2");
-    			add_location(h1, file, 8, 1, 175);
+    			add_location(h1, file, 8, 1, 249);
     			attr_dev(p0, "class", "instructions svelte-1a8f4c2");
-    			add_location(p0, file, 9, 1, 192);
+    			add_location(p0, file, 9, 1, 266);
+    			attr_dev(p1, "class", "instructions svelte-1a8f4c2");
+    			add_location(p1, file, 10, 1, 416);
     			attr_dev(a, "href", "https://craignicol.github.io/klond/#howtoplay");
-    			add_location(a, file, 10, 14, 355);
-    			add_location(p1, file, 10, 1, 342);
+    			add_location(a, file, 11, 14, 522);
+    			add_location(p2, file, 11, 1, 509);
     			attr_dev(main, "class", "svelte-1a8f4c2");
-    			add_location(main, file, 7, 0, 166);
+    			add_location(main, file, 7, 0, 240);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1112,12 +1168,14 @@ var app = (function () {
     			append_dev(main, p0);
     			append_dev(main, t3);
     			append_dev(main, p1);
-    			append_dev(p1, t4);
-    			append_dev(p1, a);
-    			append_dev(p1, t6);
-    			append_dev(main, t7);
+    			append_dev(main, t5);
+    			append_dev(main, p2);
+    			append_dev(p2, t6);
+    			append_dev(p2, a);
+    			append_dev(p2, t8);
+    			append_dev(main, t9);
     			mount_component(shelf, main, null);
-    			append_dev(main, t8);
+    			append_dev(main, t10);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(main, null);
@@ -1200,7 +1258,7 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
     	let { deck } = $$props;
-    	let { selected = [] } = $$props;
+    	let { selected = [Letter.Q, Letter.U, Letter.E, Letter.U, Letter.E, Letter.R] } = $$props;
     	const writable_props = ['deck', 'selected'];
 
     	Object.keys($$props).forEach(key => {
@@ -1212,7 +1270,7 @@ var app = (function () {
     		if ('selected' in $$props) $$invalidate(1, selected = $$props.selected);
     	};
 
-    	$$self.$capture_state = () => ({ Card, Shelf, deck, selected });
+    	$$self.$capture_state = () => ({ Card, Letter, Shelf, deck, selected });
 
     	$$self.$inject_state = $$props => {
     		if ('deck' in $$props) $$invalidate(0, deck = $$props.deck);

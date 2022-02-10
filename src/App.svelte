@@ -4,12 +4,13 @@ import { Letter } from "./deck";
 import Shelf from "./Shelf.svelte";
 
 	export let deck: Letter[];
-	export let selected: Letter[] = [];
+	export let selected: Letter[] = [Letter.Q, Letter.U, Letter.E, Letter.U, Letter.E, Letter.R];
 </script>
 
 <main>
 	<h1>Klond</h1>
 	<p class="instructions">Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
+	<p class="instructions">Words must be at least 3 letters. US and UK spellings allowed.</p>
 	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more.</p>
 
 	<Shelf currentWord={selected}/>

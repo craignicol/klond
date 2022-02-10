@@ -41,9 +41,9 @@ import { Letter } from "./deck";
   span.card.front {
     background: radial-gradient(
       circle,
-      rgba(51, 3, 3, 0.5) 0%,
-      rgba(51, 3, 3, 0.5) 80%,
-      rgba(228, 9, 9, 0.5) 100%
+      rgba(64, 33, 33) 0%,
+      rgb(64, 31, 31) 80%,
+      rgba(228, 129, 129) 100%
     );
     z-index: 1;
   }
