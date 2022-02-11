@@ -1,6 +1,7 @@
 <script lang="ts">
   import Card from "./Card.svelte";
   import { Letter } from "./deck";
+  import * as Dictionary from "./dictionary";
   export let currentWord : Letter[];
 </script>
 
