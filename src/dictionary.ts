@@ -1,5 +1,9 @@
-import * as wa from './words_alpha';
+import { words } from './words_alpha';
 
 export function getWords() : Set<string> {
-  return wa.words;
+  return words;
+}
+
+export function isWord(w: string) : boolean {
+  return words.has(w.toLowerCase());
 }
