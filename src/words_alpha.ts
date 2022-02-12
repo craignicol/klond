@@ -1,4 +1,5 @@
-a
+export const words : Set<string> = new Set<string>(
+`a
 aa
 aaa
 aah
@@ -370100,4 +370101,5 @@ zwinglianism
 zwinglianist
 zwitter
 zwitterion
-zwitterionic
+zwitterionic`.split(`
+`));

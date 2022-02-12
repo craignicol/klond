@@ -1,6 +1,7 @@
 <script lang="ts">
   import Card from "./Card.svelte";
   import { Letter } from "./deck";
+  import * as Dictionary from "./dictionary";
   export let currentWord : Letter[];
 </script>
 
@@ -11,7 +12,7 @@
   <Card face={Letter.Q} turned /> <span class="shelf-text">Click or drag cards here to make words</span>
   {/each}
   {#if currentWord.length >= 3}
-  <button class="shelf-text">Submit</button>
+  <button class="shelf-text" on:click>Submit</button>
   {:else if currentWord.length > 0}
   <span class="shelf-text">Drag 3 cards to make a word</span>
   {/if}
