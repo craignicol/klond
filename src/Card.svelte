@@ -1,11 +1,13 @@
 <script lang="ts">
 import { Letter } from "./deck";
 
-  export let face: Letter;
+  export let face: Letter = undefined;
   export let turned: boolean = false;
 </script>
 
-{#if turned}
+{#if face === undefined}
+<span class="card empty">🔄</span>
+{:else if turned}
 <span class="card back">&nbsp;</span>
 {:else}
 <span class="card front" on:click>{Letter[face]}</span>
@@ -27,6 +29,11 @@ import { Letter } from "./deck";
     text-align: center;
     line-height: 5em;
     border-radius: 0.5em;
+  }
+  span.card.empty {
+    background: white;
+    color: black;
+    border: 3px dotted black;
   }
   span.card.back {
     background: repeating-linear-gradient(

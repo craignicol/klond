@@ -49,6 +49,7 @@ import {isWord, wordScore} from "./dictionary";
 	{#each deck as c, i}
 		<Card face={c} turned={Math.random() > 0.5} on:click={_ => selectCard(c, i)}/>
 	{/each}
+	<Card />
 </main>
 
 <style>
