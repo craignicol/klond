@@ -1,6 +1,7 @@
 <script lang="ts">
+import { onMount } from "svelte";
 import Card from "./Card.svelte";
-import { Letter } from "./deck";
+import { Letter, Deal, Layout } from "./deck";
 import Shelf from "./Shelf.svelte";
 import {isWord, wordScore} from "./dictionary";
 
@@ -9,9 +10,11 @@ import {isWord, wordScore} from "./dictionary";
 	export let foundWords: String[] = [];
 	export let score: number = 0;
 	export let notFound: String = undefined;
+	export let layout: Layout = { columns: [[]], discard: [] };
 
-	function selectCard(card: Letter, index: number) {
+	function selectCard(card: Letter, index: number, component: Card) {
 		selected = [...selected, card];
+		component.$set({ selected: true });
 		deck = deck.filter((_, i) => i !== index);
 	}
 
@@ -29,6 +32,10 @@ import {isWord, wordScore} from "./dictionary";
 			notFound = word;
 		}
 	}
+
+	onMount(() => {
+		layout = Deal(deck);
+	});
 </script>
 
 <main>
@@ -46,10 +53,26 @@ import {isWord, wordScore} from "./dictionary";
 
 	<Shelf bind:currentWord={selected} on:click={checkWord}/>
 
-	{#each deck as c, i}
-		<Card face={c} turned={Math.random() > 0.5} on:click={_ => selectCard(c, i)}/>
+	<div class="row">
+		{#each layout.columns as column}
+	<div class="column">
+		{#each column as c, i}
+			<Card face={c} turned={i < column.length - 1} stacked on:click={_ => selectCard(c, i, this)}/>
+		{/each}
+	</div>
 	{/each}
-	<Card />
+	</div>
+
+	<div class="discard">
+		{#if layout.discard.length > 0}
+		<Card face={Letter.Q} turned on:click={() => _}/>
+			{:else}
+			<Card />
+			{/if}
+		{#each layout.discard.slice(0,3) as c, i}
+			<Card face={c} on:click={_ => selectCard(c, i, this)}/>
+		{/each}
+	</div>
 </main>
 
 <style>
@@ -77,9 +100,33 @@ import {isWord, wordScore} from "./dictionary";
 		display: none;
 	}
 
+	.column {
+		margin: 0 auto;
+	}
+
+	.row {
+		display: flex;
+		flex-direction: row;
+		margin: 0 auto;
+		height: 20em;
+		width: 25em;
+		float: left;
+	}
+
+	.discard {
+		float: right;
+		width: auto;
+		height: 20em;
+		margin: 0 auto;
+	}
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
+		}
+	}
+	@media (max-width: 640px) {
+		main {
+			font-size: 0.8em;
 		}
 	}
 </style>

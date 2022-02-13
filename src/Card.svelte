@@ -3,14 +3,16 @@ import { Letter } from "./deck";
 
   export let face: Letter = undefined;
   export let turned: boolean = false;
+  export let stacked: boolean = false;
+  export let selected: boolean = false;
 </script>
 
 {#if face === undefined}
 <span class="card empty">🔄</span>
 {:else if turned}
-<span class="card back">&nbsp;</span>
+<span class="card back {stacked ? 'clip' : ''}">&nbsp;</span>
 {:else}
-<span class="card front" on:click>{Letter[face]}</span>
+<span class="card front {selected ? 'selected' : ''}" on:click>{Letter[face]}</span>
 {/if}
 
 <style>
@@ -35,6 +37,13 @@ import { Letter } from "./deck";
     color: black;
     border: 3px dotted black;
   }
+
+  span.card.back.clip:not(:last-child) {
+    height: 0.5em;
+    border-bottom: 0;
+    border-radius: 0.5em 0.5em 0 0;
+    line-height: 0.5em;
+  }
   span.card.back {
     background: repeating-linear-gradient(
         45deg,
@@ -53,5 +62,8 @@ import { Letter } from "./deck";
       rgba(228, 129, 129) 100%
     );
     z-index: 1;
+  }
+  span.card.selected {
+    opacity: 0.2;
   }
 </style>

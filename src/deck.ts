@@ -61,7 +61,7 @@ export function Shuffle(seed: number): Letter[] {
   return deck;
 }
 
-interface Layout {
+export interface Layout {
   columns: Letter[][];
   discard: Letter[];
 }
