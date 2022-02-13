@@ -60,3 +60,21 @@ export function Shuffle(seed: number): Letter[] {
   }
   return deck;
 }
+
+interface Layout {
+  columns: Letter[][];
+  discard: Letter[];
+}
+
+export function Deal(input_deck: Letter[]): Layout {
+  let deck = [...input_deck]; // copy deck for splicing
+  let columns = [];
+  columns.push(deck.splice(0, 7));
+  columns.push(deck.splice(0, 6));
+  columns.push(deck.splice(0, 5));
+  columns.push(deck.splice(0, 4));
+  columns.push(deck.splice(0, 3));
+  columns.push(deck.splice(0, 2));
+  columns.push(deck.splice(0, 1));
+  return {columns, discard: deck};
+}

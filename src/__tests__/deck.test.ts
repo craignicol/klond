@@ -1,4 +1,4 @@
-import { Shuffle, Sample, Letter } from '../deck';
+import { Shuffle, Sample, Letter, Deal } from '../deck';
 
 test("new deck has 52 cards", () => {
   const sut = Shuffle(0);
@@ -114,3 +114,22 @@ test('Multiple runs are different', () => {
   console.log(Shuffle(2));
   expect(Shuffle(1)).not.toBe(Shuffle(2));
 });
+
+test('layout contains 7 columns and discard', () => {
+  const layout = Deal(Shuffle(1));
+  expect(layout.columns.length).toBe(7);
+  expect(layout.columns[0].length).toBe(7);
+  expect(layout.columns[1].length).toBe(6);
+  expect(layout.columns[2].length).toBe(5);
+  expect(layout.columns[3].length).toBe(4);
+  expect(layout.columns[4].length).toBe(3);
+  expect(layout.columns[5].length).toBe(2);
+  expect(layout.columns[6].length).toBe(1);
+  expect(layout.discard.length).toBe(24);
+});
+
+test('deal does not alter deck', () => {
+  let deck = Shuffle(2);
+  Deal(deck);
+  expect(deck.length).toEqual(52);
+})
