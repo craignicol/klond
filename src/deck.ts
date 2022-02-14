@@ -53,20 +53,25 @@ export function Sample(percent: number): Letter {
   return (cumulativeFrequencies.findIndex(f => f >= percent)) as Letter;
 }
 
-export function Shuffle(seed: number): Letter[] {
-  const deck = [...Array(52).keys()];
+export function Shuffle(seed: number): LetterCard[] {
+  const deck : LetterCard[] = new Array<LetterCard>(52);
   for (let i = 0; i < deck.length; ++i) {
-    deck[i] = Sample(Math.random() * 100);
+    deck[i] = {letter: Sample(Math.random() * 100), deckPosition: i, selected: false, used: false};
   }
   return deck;
 }
-
+export interface LetterCard {
+  letter: Letter;
+  deckPosition: number;
+  selected: boolean;
+  used: boolean;
+}
 export interface Layout {
-  columns: Letter[][];
-  discard: Letter[];
+  columns: LetterCard[][];
+  discard: LetterCard[];
 }
 
-export function Deal(input_deck: Letter[]): Layout {
+export function Deal(input_deck: LetterCard[]): Layout {
   let deck = [...input_deck]; // copy deck for splicing
   let columns = [];
   columns.push(deck.splice(0, 7));

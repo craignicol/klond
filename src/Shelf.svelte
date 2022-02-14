@@ -1,15 +1,15 @@
 <script lang="ts">
   import Card from "./Card.svelte";
-  import { Letter } from "./deck";
-  import * as Dictionary from "./dictionary";
-  export let currentWord : Letter[];
+  import { Letter, LetterCard } from "./deck";
+  export let currentWord : LetterCard[];
+  export let message : string = undefined;
 </script>
 
 <div id="shelf">
   {#each currentWord as c}
-  <Card face={c} /> 
+  <Card face={c.letter} /> 
   {:else}
-  <Card face={Letter.Q} turned /> <span class="shelf-text">Click or drag cards here to make words</span>
+  <Card face={Letter.Q} turned /> <span class="shelf-text">{#if message}{message}{:else}Click or drag cards here to make words.{/if}</span>
   {/each}
   {#if currentWord.length >= 3}
   <button class="shelf-text" on:click>Submit</button>
