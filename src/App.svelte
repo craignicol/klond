@@ -80,7 +80,7 @@ import {isWord, wordScore} from "./dictionary";
 		{#if layout.discard.length > discardIndex + 3}
 		<Card face={Letter.Q} turned on:click={dealDiscard}/>
 			{:else}
-			<Card on:click={dealDiscard}/>
+			<Card emptyText={layout.discard.length > 3 ? '🔄' : '❌'} on:click={dealDiscard}/>
 			{/if}
 		{#each layout.discard.slice(discardIndex, discardIndex + 3) as c}
 			<Card face={c.letter} bind:selected={deck[c.deckPosition].selected} on:click={_ => selectCard(c)}/>

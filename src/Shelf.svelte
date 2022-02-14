@@ -33,12 +33,13 @@
     font-size: 1.5em;
     color: #fff;
     text-align: center;
-    margin: 4rem;
+    margin: 1rem;
+    margin-left: auto;
+    max-width: 70%;
   }
 
   #shelf button.shelf-text {
     background: rgb(21, 59, 33);
     margin-right: 2rem;
-    margin-left: auto;
   }
 </style>

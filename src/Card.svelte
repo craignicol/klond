@@ -5,10 +5,11 @@ import { Letter } from "./deck";
   export let turned: boolean = false;
   export let stacked: boolean = false;
   export let selected: boolean = false;
+  export let emptyText: string = undefined;
 </script>
 
 {#if face === undefined}
-<span class="card empty" on:click>&nbsp;</span>
+<span class="card empty" on:click>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
 {:else if turned && stacked}
 <span class="card back clip">&nbsp;</span>
 {:else if turned}
