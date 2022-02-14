@@ -6,12 +6,13 @@ import Shelf from "./Shelf.svelte";
 import {isWord, wordScore} from "./dictionary";
 
 	export let deck: LetterCard[];
-	export let selected: LetterCard[] = [];
+	let selected: LetterCard[] = [];
 	export let foundWords: string[] = [];
 	export let score: number = 0;
-	export let notFound: string = undefined;
-	export let notFoundMessage: string = undefined;
-	export let layout: Layout = { columns: [[]], discard: [] };
+	let notFound: string = undefined;
+	let notFoundMessage: string = undefined;
+	let layout: Layout = { columns: [[]], discard: [] };
+	let discardIndex: number = 0;
 
 	function selectCard(card: LetterCard) { // Or unselect if selected
 		if(deck[card.deckPosition].selected) {
@@ -42,7 +43,12 @@ import {isWord, wordScore} from "./dictionary";
 		}
 	}
 
-	function dealDiscard() {} // TODO : Write this
+	function dealDiscard() {
+		discardIndex += 3;
+		if (discardIndex >= layout.discard.length) {
+			discardIndex = 0;
+		}
+	}
 
 	onMount(() => {
 		layout = Deal(deck);
@@ -51,8 +57,8 @@ import {isWord, wordScore} from "./dictionary";
 
 <main>
 	<h1>Klond</h1>
-	<p class="instructions">Drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
-	<p class="instructions">Words must be at least 3 letters. US and UK spellings allowed.</p>
+	<p class="instructions">Click or drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
+	<p class="instructions">US and UK spellings allowed.</p>
 	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more. <a href="https://github.com/dwyl/english-words">The word list is taken from Github</a></p>
 	<p class="hidden">{#each selected as l}{Letter[l.letter]}{:else}~~No selected letters~~{/each}</p>
 
@@ -71,13 +77,16 @@ import {isWord, wordScore} from "./dictionary";
 	</div>
 
 	<div class="discard">
-		{#if layout.discard.length > 0}
+		{#if layout.discard.length > discardIndex + 3}
 		<Card face={Letter.Q} turned on:click={dealDiscard}/>
 			{:else}
-			<Card />
+			<Card emptyText={layout.discard.length > 3 ? '🔄' : '❌'} on:click={dealDiscard}/>
 			{/if}
-		{#each layout.discard.slice(0,3) as c, i}
+		{#each layout.discard.slice(discardIndex, discardIndex + 3) as c}
 			<Card face={c.letter} bind:selected={deck[c.deckPosition].selected} on:click={_ => selectCard(c)}/>
+		{/each}
+		{#each Array(3 - layout.discard.slice(discardIndex, discardIndex + 3).length) as _}
+			<Card />
 		{/each}
 	</div>
 

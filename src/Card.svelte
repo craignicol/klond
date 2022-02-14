@@ -5,12 +5,15 @@ import { Letter } from "./deck";
   export let turned: boolean = false;
   export let stacked: boolean = false;
   export let selected: boolean = false;
+  export let emptyText: string = undefined;
 </script>
 
 {#if face === undefined}
-<span class="card empty">&nbsp;</span>
+<span class="card empty" on:click>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
+{:else if turned && stacked}
+<span class="card back clip">&nbsp;</span>
 {:else if turned}
-<span class="card back {stacked ? 'clip' : ''}">&nbsp;</span>
+<span class="card back" on:click>&nbsp;</span>
 {:else}
 <span class="card front {selected ? 'selected' : ''}" on:click>{Letter[face]}</span>
 {/if}
@@ -18,31 +21,33 @@ import { Letter } from "./deck";
 <style>
   span.card {
     display: inline-block;
-    width: 3em;
-    height: 5em;
+    width: 6rem;
+    height: 10rem;
     background: rgb(165, 30, 30);
-    padding: 0.1em;
-    margin: 0.3em;
+    padding: 0.1rem;
+    margin: 0.3rem;
+    margin-top: 0;
     opacity: 1;
     z-index: -1;
-    font-size: 2em;
+    font-size: 3em;
     font-weight: bold;
     color: white;
     text-align: center;
-    line-height: 5em;
-    border-radius: 0.5em;
+    line-height: 10rem;
+    border-radius: 1rem;
   }
   span.card.empty {
     background: white;
     color: black;
-    border: 3px dotted black;
+    border: dotted black;
   }
 
   span.card.back.clip:not(:last-child) {
-    height: 0.5em;
+    height: 1rem;
     border-bottom: 0;
-    border-radius: 0.5em 0.5em 0 0;
-    line-height: 0.5em;
+    border-radius: 1rem 1rem 0 0;
+    line-height: 0;
+    margin:0;
   }
   span.card.back {
     background: repeating-linear-gradient(
