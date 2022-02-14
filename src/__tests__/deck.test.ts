@@ -110,9 +110,7 @@ test("sampling is correct", () => {
 });
 
 test('Multiple runs are different', () => {
-  console.log(Shuffle(1));
-  console.log(Shuffle(2));
-  expect(Shuffle(1)).not.toBe(Shuffle(2));
+  expect(Shuffle(1)).not.toEqual(Shuffle(2));
 });
 
 test('layout contains 7 columns and discard', () => {

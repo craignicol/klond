@@ -3,6 +3,7 @@
   import { Letter, LetterCard } from "./deck";
   export let currentWord : LetterCard[];
   export let message : string = undefined;
+  const minLength = 2;
 </script>
 
 <div id="shelf">
@@ -11,10 +12,10 @@
   {:else}
   <Card face={Letter.Q} turned /> <span class="shelf-text">{#if message}{message}{:else}Click or drag cards here to make words.{/if}</span>
   {/each}
-  {#if currentWord.length >= 3}
+  {#if currentWord.length >= minLength}
   <button class="shelf-text" on:click>Submit</button>
   {:else if currentWord.length > 0}
-  <span class="shelf-text">Drag 3 cards to make a word</span>
+  <span class="shelf-text">Drag {minLength} or more cards to make a word</span>
   {/if}
 </div>
 
