@@ -81,12 +81,14 @@ import {isWord, wordScore} from "./dictionary";
 		{/each}
 	</div>
 
+	<div id="results">
 	{#if notFound}<p id="notfound">{notFound} is not a word.</p>{/if}
 	<div id="found"><p id=score>Score: {score}</p><ul>
 		{#each foundWords as w}
 		<li>{w}</li>
 		{/each}
 	</ul></div>
+	</div>
 
 </main>
 
@@ -133,6 +135,12 @@ import {isWord, wordScore} from "./dictionary";
 		width: auto;
 		height: 20em;
 		margin: 0 auto;
+	}
+
+	#results {
+		float: right;
+		margin-top: 21em;
+		text-align: left;
 	}
 	@media (min-width: 640px) {
 		main {
