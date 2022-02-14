@@ -33,6 +33,7 @@ import {isWord, wordScore} from "./dictionary";
 			selected = [];
 			notFound = undefined;
 			deck = deck.map(c => c.selected ? ({...c, selected: false, used: true}): c);
+			layout = {columns: layout.columns.map(col => col.filter(c => !deck[c.deckPosition].used)), discard: layout.discard.filter(d => !deck[d.deckPosition].used)};
 		} else {
 			deck = deck.map(c => c.selected ? ({...c, selected: false}): c);
 			selected = [];
@@ -54,12 +55,6 @@ import {isWord, wordScore} from "./dictionary";
 	<p class="instructions">Words must be at least 3 letters. US and UK spellings allowed.</p>
 	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more. <a href="https://github.com/dwyl/english-words">The word list is taken from Github</a></p>
 	<p class="hidden">{#each selected as l}{Letter[l.letter]}{:else}~~No selected letters~~{/each}</p>
-	{#if notFound}<p id="notfound">{notFound} is not a word.</p>{/if}
-	<div id="found"><p id=score>Score: {score}</p><ul>
-		{#each foundWords as w}
-		<li>{w}</li>
-		{/each}
-	</ul></div>
 
 	<Shelf bind:currentWord={selected} bind:message={notFoundMessage} on:click={checkWord}/>
 
@@ -68,6 +63,8 @@ import {isWord, wordScore} from "./dictionary";
 	<div class="column">
 		{#each column as c, i}
 			<Card face={c.letter} turned={i < column.length - 1} stacked bind:selected={deck[c.deckPosition].selected} on:click={_ => selectCard(c)}/>
+		{:else}
+			<Card />
 		{/each}
 	</div>
 	{/each}
@@ -83,6 +80,14 @@ import {isWord, wordScore} from "./dictionary";
 			<Card face={c.letter} bind:selected={deck[c.deckPosition].selected} on:click={_ => selectCard(c)}/>
 		{/each}
 	</div>
+
+	{#if notFound}<p id="notfound">{notFound} is not a word.</p>{/if}
+	<div id="found"><p id=score>Score: {score}</p><ul>
+		{#each foundWords as w}
+		<li>{w}</li>
+		{/each}
+	</ul></div>
+
 </main>
 
 <style>

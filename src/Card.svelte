@@ -8,7 +8,7 @@ import { Letter } from "./deck";
 </script>
 
 {#if face === undefined}
-<span class="card empty">🔄</span>
+<span class="card empty">&nbsp;</span>
 {:else if turned}
 <span class="card back {stacked ? 'clip' : ''}">&nbsp;</span>
 {:else}
