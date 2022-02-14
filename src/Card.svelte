@@ -23,6 +23,7 @@ import { Letter } from "./deck";
     background: rgb(165, 30, 30);
     padding: 0.1em;
     margin: 0.3em;
+    margin-top: 0;
     opacity: 1;
     z-index: -1;
     font-size: 2em;
@@ -42,7 +43,8 @@ import { Letter } from "./deck";
     height: 0.5em;
     border-bottom: 0;
     border-radius: 0.5em 0.5em 0 0;
-    line-height: 0.5em;
+    line-height: 0;
+    margin:0;
   }
   span.card.back {
     background: repeating-linear-gradient(
