@@ -21,20 +21,22 @@ import { Letter } from "./deck";
 <style>
   span.card {
     display: inline-block;
-    width: 6rem;
-    height: 10rem;
+    width: 6vw;
+    height: 10vw;
+    max-width: 6rem;
+    max-height: 10rem;
     background: rgb(165, 30, 30);
-    padding: 0.1rem;
-    margin: 0.3rem;
+    padding: 0.1em;
+    margin: 0.1em;
     margin-top: 0;
     opacity: 1;
     z-index: -1;
-    font-size: 3em;
+    font-size: 3vw;
     font-weight: bold;
     color: white;
     text-align: center;
-    line-height: 10rem;
-    border-radius: 1rem;
+    line-height: 3em;
+    border-radius: 1.5vw;
   }
   span.card.empty {
     background: white;
@@ -43,11 +45,12 @@ import { Letter } from "./deck";
   }
 
   span.card.back.clip:not(:last-child) {
-    height: 1rem;
+    height: 1em;
     border-bottom: 0;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 1.5vw 1.5vw 0 0;
     line-height: 0;
-    margin:0;
+    margin: 0;
+    padding: 0;
   }
   span.card.back {
     background: repeating-linear-gradient(
