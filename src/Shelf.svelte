@@ -19,8 +19,6 @@
   {/if}
 </div>
 
-<hr />
-
 <style>
   #shelf {
     display: flex;

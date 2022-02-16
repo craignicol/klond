@@ -53,6 +53,10 @@ import {isWord, wordScore} from "./dictionary";
 	onMount(() => {
 		layout = Deal(deck);
 	});
+
+	const scrollIntoView = (node: HTMLElement)=> {
+		node.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+	}
 </script>
 
 <main>
@@ -63,6 +67,8 @@ import {isWord, wordScore} from "./dictionary";
 	<p class="hidden">{#each selected as l}{Letter[l.letter]}{:else}~~No selected letters~~{/each}</p>
 
 	<Shelf bind:currentWord={selected} bind:message={notFoundMessage} on:click={checkWord}/>
+
+	<hr />
 
 	<div class="row">
 		{#each layout.columns as column}
@@ -92,7 +98,7 @@ import {isWord, wordScore} from "./dictionary";
 
 	<div id="results">
 	{#if notFound}<p id="notfound">{notFound} is not a word.</p>{/if}
-	<div id="found"><p id=score>Score: {score}</p><ul>
+	<div id="found"><p id=score use:scrollIntoView >Score: {score}</p><ul>
 		{#each foundWords as w}
 		<li>{w}</li>
 		{/each}
@@ -104,21 +110,22 @@ import {isWord, wordScore} from "./dictionary";
 <style>
 	main {
 		text-align: center;
-		padding: 1em;
-		max-width: 240px;
+		padding: 1rem;
+		max-width: 95%;
 		margin: 0 auto;
+		font-size: 20vx;
     font-family: "OpenDyslexic3", "OpenDyslexic2", "Dyslexie", "Comic Sans MS", cursive, sans-serif;
 	}
 
 	h1 {
 		color: #ff3e00;
 		text-transform: uppercase;
-		font-size: 4em;
+		font-size: 4rem;
 		font-weight: 100;
 	}
 
 	p.instructions {
-		font-size: 1.2em;
+		font-size: 1.2rem;
 		margin-bottom: 1em;
 	}
 
@@ -134,21 +141,23 @@ import {isWord, wordScore} from "./dictionary";
 		display: flex;
 		flex-direction: row;
 		margin: 0 auto;
-		height: 20em;
-		width: 25em;
+		height: 40vw;
+		width: 50vw;
+		max-width: 25rem;
 		float: left;
 	}
 
 	.discard {
 		float: right;
 		width: auto;
-		height: 20em;
+		height: 12vw;
+		max-height: 12rem;
 		margin: 0 auto;
 	}
 
 	#results {
 		float: right;
-		margin-top: 21em;
+		margin-top: 21rem;
 		text-align: left;
 	}
 	@media (min-width: 640px) {
