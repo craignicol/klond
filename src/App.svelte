@@ -54,7 +54,7 @@ import {isWord, wordScore} from "./dictionary";
 		layout = Deal(deck);
 	});
 
-	const scrollIntoView = (node)=> {
+	const scrollIntoView = (node: HTMLElement)=> {
 		node.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
 	}
 </script>
