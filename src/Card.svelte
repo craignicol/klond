@@ -9,13 +9,13 @@ import { Letter } from "./deck";
 </script>
 
 {#if face === undefined}
-<span class="card empty" on:click>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
+<span class="card empty" on:click on:dblclick>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
 {:else if turned && stacked}
 <span class="card back clip">&nbsp;</span>
 {:else if turned}
-<span class="card back" on:click>&nbsp;</span>
+<span class="card back" on:click on:dblclick>&nbsp;</span>
 {:else}
-<span class="card front {selected ? 'selected' : ''}" on:click>{Letter[face]}</span>
+<span class="card front {selected ? 'selected' : ''}" on:click on:dblclick>{Letter[face]}</span>
 {/if}
 
 <style>

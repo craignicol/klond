@@ -1,16 +1,23 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
   import Card from "./Card.svelte";
   import { Letter, LetterCard } from "./deck";
   export let currentWord : LetterCard[];
   export let message : string = undefined;
   const minLength = 2;
+
+  const dispatch = createEventDispatcher();
+
+  export function deselect(letter : LetterCard) {
+    dispatch('deselect', letter);
+  }
 </script>
 
 <div id="shelf">
   {#each currentWord as c}
-  <Card face={c.letter} /> 
+  <Card face={c.letter} on:dblclick={_ => deselect(c)}/> 
   {:else}
-  <Card face={Letter.Q} turned /> <span class="shelf-text">{#if message}{message}{:else}Click or drag cards here to make words.{/if}</span>
+  <Card face={Letter.Q} turned /> <span class="shelf-text">{#if message}{message}{:else}Double-click or drag cards here to make words.{/if}</span>
   {/each}
   {#if currentWord.length >= minLength}
   <button class="shelf-text" on:click>Submit</button>

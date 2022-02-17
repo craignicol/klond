@@ -61,12 +61,13 @@ import {isWord, wordScore} from "./dictionary";
 
 <main>
 	<h1>Klond</h1>
-	<p class="instructions">Click or drag cards to make words. More points for longer words, but you'll lose points for any cards you can't make into words.</p>
+	<p class="instructions">Double-click or drag cards to make words. Click the card back beside the 3-card spread to deal more cards.</p>
+	<p class="instructions">More points for longer words, but you'll lose points for any cards you can't make into words.</p>
 	<p class="instructions">US and UK spellings allowed.</p>
 	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more. <a href="https://github.com/dwyl/english-words">The word list is taken from Github</a></p>
 	<p class="hidden">{#each selected as l}{Letter[l.letter]}{:else}~~No selected letters~~{/each}</p>
 
-	<Shelf bind:currentWord={selected} bind:message={notFoundMessage} on:click={checkWord}/>
+	<Shelf bind:currentWord={selected} bind:message={notFoundMessage} on:click={checkWord} on:deselect={event => selectCard(event.detail)}/>
 
 	<hr />
 
@@ -74,7 +75,7 @@ import {isWord, wordScore} from "./dictionary";
 		{#each layout.columns as column}
 	<div class="column">
 		{#each column as c, i}
-			<Card face={c.letter} turned={i < column.length - 1} stacked bind:selected={deck[c.deckPosition].selected} on:click={_ => selectCard(c)}/>
+			<Card face={c.letter} turned={i < column.length - 1} stacked bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)}/>
 		{:else}
 			<Card />
 		{/each}
@@ -89,7 +90,7 @@ import {isWord, wordScore} from "./dictionary";
 			<Card emptyText={layout.discard.length > 3 ? '🔄' : '❌'} on:click={dealDiscard}/>
 			{/if}
 		{#each layout.discard.slice(discardIndex, discardIndex + 3) as c}
-			<Card face={c.letter} bind:selected={deck[c.deckPosition].selected} on:click={_ => selectCard(c)}/>
+			<Card face={c.letter} bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)}/>
 		{/each}
 		{#each Array(3 - layout.discard.slice(discardIndex, discardIndex + 3).length) as _}
 			<Card />
