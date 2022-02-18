@@ -11,10 +11,17 @@ import {isWord, wordScore} from "./dictionary";
 	export let score: number = 0;
 	let notFound: string = undefined;
 	let notFoundMessage: string = undefined;
+	let dragMessage: string = undefined;
 	let layout: Layout = { columns: [[]], discard: [] };
 	let discardIndex: number = 0;
+	const verbose = false;
+	const genericCard: LetterCard = { letter: Letter.Q, deckPosition: -1, selected: false, used: false };
 
 	function selectCard(card: LetterCard) { // Or unselect if selected
+		if(card === undefined) {
+			dragMessage = "card not found";
+			return;
+		}
 		if(deck[card.deckPosition].selected) {
 			selected = selected.filter(c => c.deckPosition !== card.deckPosition);
 			deck = deck.map((c, i) => i === card.deckPosition ? {...c, selected: false} : c);
@@ -57,6 +64,38 @@ import {isWord, wordScore} from "./dictionary";
 	const scrollIntoView = (node: HTMLElement)=> {
 		node.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
 	}
+
+	function startDrag(e: DragEvent, card: LetterCard, columnidx: number) {
+		e.dataTransfer.setData("card", card.deckPosition.toString());
+		e.dataTransfer.setData("source", columnidx.toString());
+		e.dataTransfer.dropEffect = "move";
+		dragMessage = "Dragging " + Letter[card.letter] + card.deckPosition.toString() + " from column " + columnidx.toString();
+	}
+
+	function dragDrop(e: DragEvent) {
+		dragMessage = "Dropping...";
+		// Only handling shelf for now
+		if ((e.target instanceof Element) && (e.target.id === "shelf")) {
+			dragMessage = "Dropping on the correct shelf";
+			const card = deck[parseInt(e.dataTransfer.getData("card"))];
+			const source = parseInt(e.dataTransfer.getData("source"));
+			e.stopPropagation();
+			selectCard(card);
+			return false;
+		}
+		dragMessage = "Dropping on " + (e.target instanceof Element ? e.target.nodeName + "#" + e.target.id : "nothing");
+	}
+
+	function dragOver(e: DragEvent) {
+		dragMessage = "Dragging over...";
+		return false;
+	}
+
+	function cardDragEnter(e: DragEvent) {
+		dragMessage = "Dragging enter...";
+		e.preventDefault();
+		return true;
+	}
 </script>
 
 <main>
@@ -67,15 +106,15 @@ import {isWord, wordScore} from "./dictionary";
 	<p>Visit the <a href="https://craignicol.github.io/klond/#howtoplay">Klond tutorial</a> to find out more. <a href="https://github.com/dwyl/english-words">The word list is taken from Github</a></p>
 	<p class="hidden">{#each selected as l}{Letter[l.letter]}{:else}~~No selected letters~~{/each}</p>
 
-	<Shelf bind:currentWord={selected} bind:message={notFoundMessage} on:click={checkWord} on:deselect={event => selectCard(event.detail)}/>
+	<Shelf bind:currentWord={selected} bind:message={notFoundMessage} on:click={checkWord} on:drop={dragDrop} on:dragover={dragOver} on:dragenter={cardDragEnter} on:deselect={event => selectCard(event.detail)}/>
 
 	<hr />
 
 	<div class="row">
-		{#each layout.columns as column}
+		{#each layout.columns as column, columnIdx}
 	<div class="column">
 		{#each column as c, i}
-			<Card face={c.letter} turned={i < column.length - 1} stacked bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)}/>
+			<Card face={c} turned={i < column.length - 1} stacked bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)} on:dragstart={e => startDrag(e, c, columnIdx)}/>
 		{:else}
 			<Card />
 		{/each}
@@ -85,12 +124,12 @@ import {isWord, wordScore} from "./dictionary";
 
 	<div class="discard">
 		{#if layout.discard.length > discardIndex + 3}
-		<Card face={Letter.Q} turned on:click={dealDiscard}/>
+		<Card face={genericCard} turned on:click={dealDiscard}/>
 			{:else}
 			<Card emptyText={layout.discard.length > 3 ? '🔄' : '❌'} on:click={dealDiscard}/>
 			{/if}
 		{#each layout.discard.slice(discardIndex, discardIndex + 3) as c}
-			<Card face={c.letter} bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)}/>
+			<Card face={c} bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)} on:dragstart={e => startDrag(e, c, -1)}/>
 		{/each}
 		{#each Array(3 - layout.discard.slice(discardIndex, discardIndex + 3).length) as _}
 			<Card />
@@ -98,6 +137,7 @@ import {isWord, wordScore} from "./dictionary";
 	</div>
 
 	<div id="results">
+	{#if dragMessage && verbose}{dragMessage}{/if}
 	{#if notFound}<p id="notfound">{notFound} is not a word.</p>{/if}
 	<div id="found"><p id=score use:scrollIntoView >Score: {score}</p><ul>
 		{#each foundWords as w}

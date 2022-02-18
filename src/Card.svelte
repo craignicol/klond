@@ -1,7 +1,7 @@
 <script lang="ts">
-import { Letter } from "./deck";
+import { Letter, LetterCard } from "./deck";
 
-  export let face: Letter = undefined;
+  export let face: LetterCard = undefined;
   export let turned: boolean = false;
   export let stacked: boolean = false;
   export let selected: boolean = false;
@@ -11,11 +11,11 @@ import { Letter } from "./deck";
 {#if face === undefined}
 <span class="card empty" on:click on:dblclick>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
 {:else if turned && stacked}
-<span class="card back clip">&nbsp;</span>
+<span class="card back clip" id="card-{face.deckPosition}">&nbsp;</span>
 {:else if turned}
-<span class="card back" on:click on:dblclick>&nbsp;</span>
+<span class="card back" id="card-{face.deckPosition}" on:click on:dblclick>&nbsp;</span>
 {:else}
-<span class="card front {selected ? 'selected' : ''}" on:click on:dblclick>{Letter[face]}</span>
+<span class="card front {selected ? 'selected' : ''}" id="card-{face.deckPosition}" draggable=true on:click on:dblclick on:dragstart on:dragend on:touchstart on:touchend>{Letter[face.letter]}</span>
 {/if}
 
 <style>
