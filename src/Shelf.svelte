@@ -1,16 +1,24 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
   import Card from "./Card.svelte";
   import { Letter, LetterCard } from "./deck";
   export let currentWord : LetterCard[];
   export let message : string = undefined;
   const minLength = 2;
+	const emptyCard: LetterCard = { letter: Letter.Q, deckPosition: -10, selected: false, used: false };
+
+  const dispatch = createEventDispatcher();
+
+  export function deselect(letter : LetterCard) {
+    dispatch('deselect', letter);
+  }
 </script>
 
-<div id="shelf">
+<div id="shelf" ondragover="return false" on:dragover on:dragstart on:dragenter on:dragend on:touchstart on:touchend on:drop>
   {#each currentWord as c}
-  <Card face={c.letter} /> 
+  <Card face={c} on:dblclick={_ => deselect(c)}/> 
   {:else}
-  <Card face={Letter.Q} turned /> <span class="shelf-text">{#if message}{message}{:else}Click or drag cards here to make words.{/if}</span>
+  <Card face={emptyCard} turned /> <span class="shelf-text">{#if message}{message}{:else}Double-click or drag cards here to make words.{/if}</span>
   {/each}
   {#if currentWord.length >= minLength}
   <button class="shelf-text" on:click>Submit</button>
