@@ -16,7 +16,7 @@
 	let dragMessage: string = undefined;
 	let layout: Layout = { columns: [[]], discard: [] };
 	let discardIndex: number = 0;
-	const verbose = true;
+	const verbose = false;
 	const genericCard: LetterCard = {
 		letter: Letter.Q,
 		deckPosition: -1,
@@ -306,6 +306,7 @@
 		font-size: 1vw;
 		font-family: "OpenDyslexic3", "OpenDyslexic2", "Dyslexie", "Comic Sans MS",
 			cursive, sans-serif;
+		touch-action: none;
 	}
 
 	h1 {
@@ -313,6 +314,7 @@
 		text-transform: uppercase;
 		font-size: 4rem;
 		font-weight: 100;
+		margin: 0;
 	}
 
 	p.hidden {
@@ -343,11 +345,12 @@
 
 	#results {
 		float: right;
-		margin-top: 21rem;
+		margin-top: 2.2rem;
 		text-align: left;
 		background: #f3ac6577;
 		border: 5px solid #ff3e00;
 		padding: 2em;
+		column-count: 2;
 	}
 
 	.backdrop {

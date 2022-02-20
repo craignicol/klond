@@ -1,29 +1,49 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
   import Card from "./Card.svelte";
   import { Letter, LetterCard } from "./deck";
-  export let currentWord : LetterCard[];
-  export let message : string = undefined;
+  export let currentWord: LetterCard[];
+  export let message: string = undefined;
   const minLength = 2;
-	const emptyCard: LetterCard = { letter: Letter.Q, deckPosition: -10, selected: false, used: false };
+  const emptyCard: LetterCard = {
+    letter: Letter.Q,
+    deckPosition: -10,
+    selected: false,
+    used: false
+  };
 
   const dispatch = createEventDispatcher();
 
-  export function deselect(letter : LetterCard) {
-    dispatch('deselect', letter);
+  export function deselect(letter: LetterCard) {
+    dispatch("deselect", letter);
   }
 </script>
 
-<div id="shelf" ondragover="return false" on:dragover on:dragstart on:dragenter on:dragend on:touchstart on:touchend on:drop>
+<div
+  id="shelf"
+  ondragover="return false"
+  on:dragover
+  on:dragstart
+  on:dragenter
+  on:dragend
+  on:touchstart
+  on:touchend
+  on:drop
+>
   {#each currentWord as c}
-  <Card face={c} on:dblclick={_ => deselect(c)}/> 
+    <Card face={c} on:dblclick={_ => deselect(c)} />
   {:else}
-  <Card face={emptyCard} turned /> <span class="shelf-text">{#if message}{message}{:else}Double-click or drag cards here to make words.{/if}</span>
+    <Card face={emptyCard} turned />
+    <span class="shelf-text"
+      >{#if message}{message}{:else}Double-click or drag cards here to make
+        words.{/if}</span
+    >
   {/each}
   {#if currentWord.length >= minLength}
-  <button class="shelf-text" on:click>Submit</button>
+    <button class="shelf-text" on:click>Submit</button>
   {:else if currentWord.length > 0}
-  <span class="shelf-text">Drag {minLength} or more cards to make a word</span>
+    <span class="shelf-text">Drag {minLength} or more cards to make a word</span
+    >
   {/if}
 </div>
 
@@ -36,12 +56,12 @@
     border-bottom: 5px solid rgb(15, 15, 15);
   }
   #shelf .shelf-text {
-    font-size: 1.5em;
+    font-size: 1.2em;
     color: #fff;
     text-align: center;
-    margin: 1rem;
+    margin: 0;
     margin-left: auto;
-    max-width: 70%;
+    max-width: 80%;
   }
 
   #shelf button.shelf-text {
