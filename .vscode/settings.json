@@ -10,5 +10,8 @@
       "addWords": true,
       "scope": "workspace"
     }
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
   }
 }
