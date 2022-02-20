@@ -15,7 +15,7 @@ import { Letter, LetterCard } from "./deck";
 {:else if turned}
 <span class="card back" id="card-{face.deckPosition}" on:click on:dblclick>&nbsp;</span>
 {:else}
-<span class="card front {selected ? 'selected' : ''}" id="card-{face.deckPosition}" draggable=true on:click on:dblclick on:dragstart on:dragend on:touchstart on:touchend>{Letter[face.letter]}</span>
+<span class="card front {selected ? 'selected' : ''}" id="card-{face.deckPosition}" draggable=true on:click on:dblclick on:dragstart on:dragend on:touchstart on:touchmove on:touchend>{Letter[face.letter]}</span>
 {/if}
 
 <style>

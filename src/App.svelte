@@ -14,8 +14,15 @@ import {isWord, wordScore} from "./dictionary";
 	let dragMessage: string = undefined;
 	let layout: Layout = { columns: [[]], discard: [] };
 	let discardIndex: number = 0;
-	const verbose = false;
+	const verbose = true;
 	const genericCard: LetterCard = { letter: Letter.Q, deckPosition: -1, selected: false, used: false };
+
+	let shelf: HTMLElement;
+	let touchedCard: LetterCard;
+	let sourceColumn: number;
+	let activeEvent = '';
+  let originalX = '';
+  let originalY = '';
 
 	function selectCard(card: LetterCard) { // Or unselect if selected
 		if(card === undefined) {
@@ -59,6 +66,7 @@ import {isWord, wordScore} from "./dictionary";
 
 	onMount(() => {
 		layout = Deal(deck);
+		shelf = document.getElementById("shelf"); 
 	});
 
 	const scrollIntoView = (node: HTMLElement)=> {
@@ -96,6 +104,58 @@ import {isWord, wordScore} from "./dictionary";
 		e.preventDefault();
 		return true;
 	}
+
+	function handleTouchStart(e: TouchEvent, card: LetterCard, columnidx: number) {
+    	dragMessage = "Touch start with card " + card.deckPosition.toString() + "-" + Letter[card.letter] + " from column " + columnidx.toString();
+			const sourceElement = e.target as HTMLElement;
+      originalX = (sourceElement.offsetLeft - 10) + "px";
+      originalY = (sourceElement.offsetTop - 10) + "px";
+      activeEvent = 'start';
+			touchedCard = card;
+			sourceColumn = columnidx;
+    }
+
+    function handleTouchMove(e: TouchEvent) {
+    	let touchLocation = e.targetTouches[0];
+    	let pageX = Math.floor((touchLocation.pageX - 50)) + "px";
+    	let pageY = Math.floor((touchLocation.pageY - 50)) + "px";
+    	dragMessage = "Touch x " + pageX + " Touch y " + pageY;
+			const targetElement = e.target as HTMLElement;
+    	targetElement.style.position = "absolute";
+    	targetElement.style.left = pageX;
+    	targetElement.style.top = pageY;
+    	activeEvent = 'move';
+    }
+
+    function handleTouchEnd(e: TouchEvent) {
+    	e.preventDefault();
+    	if (activeEvent === 'move') {
+				const targetElement = e.target as HTMLElement;
+      	let pageX = (parseInt(targetElement.style.left) - 50);
+      	let pageY = (parseInt(targetElement.style.top) - 50);
+
+      	if (detectTouchEnd(shelf.offsetLeft, shelf.offsetTop, pageX, pageY, shelf.offsetWidth, shelf.offsetHeight)) {
+        	selectCard(touchedCard);
+        	targetElement.style.position = "initial";
+        	dragMessage = "You dropped " + targetElement
+          	.getAttribute('id') + " into drop zone";
+        } else {
+        	targetElement.style.left = originalX;
+        	targetElement.style.top = originalY;
+        	dragMessage = "You let card " + targetElement.getAttribute('id') + " go.";
+        }
+      }
+    }
+
+    function detectTouchEnd(x1, y1, x2, y2, w, h) {
+    	//Very simple detection here
+    	if (Math.abs(x2 - x1) > w) 
+      	return false;
+    	if (Math.abs(y2 - y1) > h) 
+      	return false;
+    	return true;
+    }
+
 </script>
 
 <main>
@@ -114,7 +174,7 @@ import {isWord, wordScore} from "./dictionary";
 		{#each layout.columns as column, columnIdx}
 	<div class="column">
 		{#each column as c, i}
-			<Card face={c} turned={i < column.length - 1} stacked bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)} on:dragstart={e => startDrag(e, c, columnIdx)}/>
+			<Card face={c} turned={i < column.length - 1} stacked bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)} on:dragstart={e => startDrag(e, c, columnIdx)}  on:touchstart={e => handleTouchStart(e, c, columnIdx)} on:touchmove={handleTouchMove} on:touchend={handleTouchEnd}/>
 		{:else}
 			<Card />
 		{/each}
@@ -129,7 +189,7 @@ import {isWord, wordScore} from "./dictionary";
 			<Card emptyText={layout.discard.length > 3 ? '🔄' : '❌'} on:click={dealDiscard}/>
 			{/if}
 		{#each layout.discard.slice(discardIndex, discardIndex + 3) as c}
-			<Card face={c} bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)} on:dragstart={e => startDrag(e, c, -1)}/>
+			<Card face={c} bind:selected={deck[c.deckPosition].selected} on:dblclick={_ => selectCard(c)} on:dragstart={e => startDrag(e, c, -1)} on:touchstart={e => handleTouchStart(e, c, -1)} on:touchmove={handleTouchMove} on:touchend={handleTouchEnd}/>
 		{/each}
 		{#each Array(3 - layout.discard.slice(discardIndex, discardIndex + 3).length) as _}
 			<Card />
