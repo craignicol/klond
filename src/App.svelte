@@ -4,6 +4,8 @@
 	import { Letter, LetterCard, Deal, Layout } from "./deck";
 	import Shelf from "./Shelf.svelte";
 	import { isWord, wordScore } from "./dictionary";
+	import { Modals, closeModal, openModal } from "svelte-modals";
+	import Help from "./Help.svelte";
 
 	export let deck: LetterCard[];
 	let selected: LetterCard[] = [];
@@ -208,26 +210,16 @@
 	}
 </script>
 
+<Modals>
+	<div slot="backdrop" class="backdrop" on:click={closeModal} />
+</Modals>
+
 <main>
 	<h1>Klond</h1>
-	<p class="instructions">
-		Double-click or drag cards to make words. Click the card back beside the
-		3-card spread to deal more cards.
-	</p>
-	<p class="instructions">
-		More points for longer words, but you'll lose points for any cards you can't
-		make into words.
-	</p>
-	<p class="instructions">US and UK spellings allowed.</p>
-	<p>
-		Visit the <a href="https://craignicol.github.io/klond/#howtoplay"
-			>Klond tutorial</a
-		>
-		to find out more.
-		<a href="https://github.com/dwyl/english-words"
-			>The word list is taken from Github</a
-		>
-	</p>
+	<button
+		on:click={() => openModal(Help, { title: "How to play" })}
+		id="open-help">❓</button
+	>
 	<p class="hidden">
 		{#each selected as l}{Letter[l.letter]}{:else}~~No selected letters~~{/each}
 	</p>
@@ -323,11 +315,6 @@
 		font-weight: 100;
 	}
 
-	p.instructions {
-		font-size: 1.2rem;
-		margin-bottom: 1em;
-	}
-
 	p.hidden {
 		display: none;
 	}
@@ -358,7 +345,29 @@
 		float: right;
 		margin-top: 21rem;
 		text-align: left;
+		background: #f3ac6577;
+		border: 5px solid #ff3e00;
+		padding: 2em;
 	}
+
+	.backdrop {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		background: rgba(0, 0, 0, 0.5);
+	}
+
+	#open-help {
+		position: fixed;
+		top: 0;
+		right: 0;
+		font-size: 2rem;
+		color: #ff3e00;
+		cursor: help;
+	}
+
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
