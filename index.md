@@ -1,37 +1,37 @@
-## Welcome to GitHub Pages
+# Klond : A card word game
 
-You can use the [editor on GitHub](https://github.com/craignicol/klond/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+[Play now](./play/)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Frequency Asked Questions
 
-### Markdown
+### What is Klond?
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Klond is a letter game, inspired by the card game [Klondike](https://en.wikipedia.org/wiki/Klondike_(card_game)). The aim of the game is to create as many words as possible from the letters in the deck, with the fewest cards remaining.
 
-```markdown
-Syntax highlighted code block
+### How do I play?
 
-# Header 1
-## Header 2
-### Header 3
+Double-click or drag the cards onto the shelf above the playing area. Press "Submit" to submit your word. Longer words are worth more points.
 
-- Bulleted
-- List
+### Why do have cards left when there's no words to play?
 
-1. Numbered
-2. List
+There is no guarantee that the deck can be completely emptied. The aim is to score as many points as possible, not to clear the deck, although you will lose points if there are cards remaining at the end.
 
-**Bold** and _Italic_ and `Code` text
+### Can I undo my last word?
 
-[Link](url) and ![Image](src)
-```
+No. That's cheating.
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+### Do you track me whilst I play?
 
-### Jekyll Themes
+No. I've got better things to do with my time.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/craignicol/klond/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### How do you make money from Klond?
 
-### Support or Contact
+I don't. I made it for love.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Can I translate Klond to my own language?
+
+Please do. [The code is on github](https://github.com/craignicol/klond). Please submit a pull request, or join a discussion.
+
+### I've found a bug!
+
+Please [file an issue on github](https://github.com/craignicol/klond/issues). I make no guarantee I will fix it though (see above about the amount of money I make from this).
