@@ -1,6 +1,6 @@
 # Klond : A card word game
 
-[Play now](./play/)
+## **[Play now](./play/)**
 
 ## Frequency Asked Questions
 
