@@ -1,39 +1,36 @@
 <script lang="ts">
-  import { closeModal } from "svelte-modals";
-
-  export let isOpen: boolean = false;
+  import { getContext } from "svelte";
+  const { close } = getContext("simple-modal");
 
   export let title: string = "How to Play";
 </script>
 
-{#if isOpen}
-  <div role="dialog" class="modal">
-    <div class="contents">
-      <h2>{title}</h2>
-      <p class="instructions">
-        Double-click or drag cards to make words. Click the card back beside the
-        3-card spread to deal more cards.
-      </p>
-      <p class="instructions">
-        More points for longer words, but you'll lose points for any cards you
-        can't make into words.
-      </p>
-      <p class="instructions">US and UK spellings allowed.</p>
-      <p>
-        Visit the <a href="https://craignicol.github.io/klond/#howtoplay"
-          >Klond tutorial</a
-        >
-        to find out more.
-        <a href="https://github.com/dwyl/english-words"
-          >The word list is taken from Github</a
-        >
-      </p>
-      <div class="actions">
-        <button on:click={closeModal}>OK</button>
-      </div>
+<div role="dialog" class="modal">
+  <div class="contents">
+    <h2>{title}</h2>
+    <p class="instructions">
+      Double-click or drag cards to make words. Click the card back beside the
+      3-card spread to deal more cards.
+    </p>
+    <p class="instructions">
+      More points for longer words, but you'll lose points for any cards you
+      can't make into words.
+    </p>
+    <p class="instructions">US and UK spellings allowed.</p>
+    <p>
+      Visit the <a href="https://craignicol.github.io/klond/#howtoplay"
+        >Klond tutorial</a
+      >
+      to find out more.
+      <a href="https://github.com/dwyl/english-words"
+        >The word list is taken from Github</a
+      >
+    </p>
+    <div class="actions">
+      <button on:click={close}>OK</button>
     </div>
   </div>
-{/if}
+</div>
 
 <style>
   .modal {

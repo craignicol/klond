@@ -4,8 +4,9 @@
 	import { Letter, LetterCard, Deal, Layout } from "./deck";
 	import Shelf from "./Shelf.svelte";
 	import { isWord, wordScore } from "./dictionary";
-	import { Modals, closeModal, openModal } from "svelte-modals";
+	import { Modal } from "svelte-simple-modal";
 	import Help from "./Help.svelte";
+	import HelpButton from "./HelpButton.svelte";
 
 	export let deck: LetterCard[];
 	let selected: LetterCard[] = [];
@@ -210,16 +211,12 @@
 	}
 </script>
 
-<Modals>
-	<div slot="backdrop" class="backdrop" on:click={closeModal} />
-</Modals>
+<Modal>
+	<HelpButton />
+</Modal>
 
 <main>
 	<h1>Klond</h1>
-	<button
-		on:click={() => openModal(Help, { title: "How to play" })}
-		id="open-help">❓</button
-	>
 	<p class="hidden">
 		{#each selected as l}{Letter[l.letter]}{:else}~~No selected letters~~{/each}
 	</p>
@@ -360,15 +357,6 @@
 		right: 0;
 		left: 0;
 		background: rgba(0, 0, 0, 0.5);
-	}
-
-	#open-help {
-		position: fixed;
-		top: 0;
-		right: 0;
-		font-size: 2rem;
-		color: #ff3e00;
-		cursor: help;
 	}
 
 	@media (min-width: 640px) {
