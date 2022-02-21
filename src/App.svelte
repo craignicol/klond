@@ -77,9 +77,14 @@
 	}
 
 	function dealDiscard() {
-		discardIndex += 3;
-		if (discardIndex >= layout.discard.length) {
-			discardIndex = 0;
+		if (selected.length === 0) {
+			discardIndex += 3;
+			if (discardIndex >= layout.discard.length) {
+				discardIndex = 0;
+			}
+			notFoundMessage = undefined;
+		} else {
+			notFoundMessage = "Cannot deal in middle of a word";
 		}
 	}
 
