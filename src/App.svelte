@@ -4,8 +4,7 @@
 	import { Letter, LetterCard, Deal, Layout } from "./deck";
 	import Shelf from "./Shelf.svelte";
 	import { isWord, wordScore } from "./dictionary";
-	import { Modal } from "svelte-simple-modal";
-	import Help from "./Help.svelte";
+	import Modal from "svelte-simple-modal";
 	import HelpButton from "./HelpButton.svelte";
 
 	export let deck: LetterCard[];
@@ -348,15 +347,6 @@
 		border: 5px solid #ff3e00;
 		padding: 2em;
 		column-count: 2;
-	}
-
-	.backdrop {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		right: 0;
-		left: 0;
-		background: rgba(0, 0, 0, 0.5);
 	}
 
 	@media (min-width: 640px) {
