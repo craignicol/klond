@@ -6,12 +6,19 @@
 	import { isWord, wordScore } from "./dictionary";
 	import Modal from "svelte-simple-modal";
 	import HelpButton from "./HelpButton.svelte";
+	import EndGamePopup from "./EndGamePopup.svelte";
 
 	export let deck: LetterCard[];
 	let selected: LetterCard[] = [];
 	export let foundWords: string[] = [];
+	$: wordLengths = foundWords.map(w => w.split(" : ")[0].length);
+	$: longestWordLength = Math.max(...wordLengths, 0);
+	$: wordsCount = wordLengths.length;
+	$: cardsRemaining = deck.filter(c => !c.used);
+
 	export let score: number = 0;
-	export let penaltyScore: number = 0;
+	export let penaltyScore: number = undefined;
+	let hasEnded: boolean = false;
 	const minLength = 2;
 	let notFound: string = undefined;
 	let notFoundMessage: string = undefined;
@@ -98,6 +105,7 @@
 				.map(c => c.letter)
 				.join("")
 		);
+		hasEnded = true;
 		notFoundMessage = "Game Over";
 	}
 
@@ -260,6 +268,17 @@
 
 <Modal>
 	<HelpButton />
+</Modal>
+
+<Modal>
+	<EndGamePopup
+		bind:hasEnded
+		bind:score
+		bind:penaltyScore
+		bind:longestWordLength
+		bind:wordsCount
+		bind:cardsRemaining={cardsRemaining.length}
+	/>
 </Modal>
 
 <main>

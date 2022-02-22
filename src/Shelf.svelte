@@ -5,7 +5,7 @@
   export let currentWord: LetterCard[];
   export let message: string = undefined;
   export let dragtarget: boolean = false;
-  export const minLength = 2;
+  export let minLength = 2;
   const emptyCard: LetterCard = {
     letter: Letter.Q,
     deckPosition: -10,
@@ -56,6 +56,7 @@
       >{#if message}{message}{:else}Double-click or drag cards here to make
         words.{/if}</span
     >
+    <button class="shelf-text end" on:click={end}>End Game</button>
   {/each}
   {#if currentWord.length >= minLength}
     <button class="shelf-text submit" on:click={submit}>Submit</button>
@@ -64,7 +65,6 @@
     <span class="shelf-text">Drag {minLength} or more cards to make a word</span
     >
   {/if}
-  <button class="shelf-text end" on:click={end}>End Game</button>
 </div>
 
 <style>
