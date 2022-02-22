@@ -4,6 +4,7 @@
   import { Letter, LetterCard } from "./deck";
   export let currentWord: LetterCard[];
   export let message: string = undefined;
+  export let dragtarget: boolean = false;
   const minLength = 2;
   const emptyCard: LetterCard = {
     letter: Letter.Q,
@@ -22,6 +23,7 @@
 <div
   id="shelf"
   ondragover="return false"
+  class={dragtarget ? "dragtarget" : ""}
   on:dragover
   on:dragstart
   on:dragenter
@@ -54,6 +56,9 @@
     justify-content: center;
     background: linear-gradient(#c1bebe, #545656);
     border-bottom: 5px solid rgb(15, 15, 15);
+  }
+  #shelf.dragtarget {
+    border: 5px solid rgb(15, 15, 15);
   }
   #shelf .shelf-text {
     font-size: 1.2em;

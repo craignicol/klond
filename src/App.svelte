@@ -30,6 +30,7 @@
 	let activeEvent = "";
 	let originalX = "";
 	let originalY = "";
+	let dragtarget: boolean = false;
 
 	function selectCard(card: LetterCard) {
 		// Or unselect if selected
@@ -115,6 +116,7 @@
 
 	function dragDrop(e: DragEvent) {
 		dragMessage = "Dropping...";
+		dragtarget = false;
 		// Only handling shelf for now
 		if (e.target instanceof Element && e.target.id === "shelf") {
 			dragMessage = "Dropping on the correct shelf";
@@ -133,11 +135,13 @@
 
 	function dragOver(e: DragEvent) {
 		dragMessage = "Dragging over...";
+		dragtarget = true;
 		return false;
 	}
 
 	function cardDragEnter(e: DragEvent) {
 		dragMessage = "Dragging enter...";
+		dragtarget = true;
 		e.preventDefault();
 		return true;
 	}
@@ -172,6 +176,20 @@
 		targetElement.style.left = pageX;
 		targetElement.style.top = pageY;
 		activeEvent = "move";
+		if (
+			detectTouchEnd(
+				shelf.offsetLeft,
+				shelf.offsetTop,
+				pageX,
+				pageY,
+				shelf.offsetWidth,
+				shelf.offsetHeight
+			)
+		) {
+			dragtarget = true;
+		} else {
+			dragtarget = false;
+		}
 	}
 
 	function handleTouchEnd(e: TouchEvent) {
@@ -204,6 +222,7 @@
 
 			touchedCard = undefined;
 			sourceColumn = undefined;
+			dragtarget = false;
 		}
 	}
 
@@ -228,6 +247,7 @@
 	<Shelf
 		bind:currentWord={selected}
 		bind:message={notFoundMessage}
+		bind:dragtarget
 		on:click={checkWord}
 		on:drop={dragDrop}
 		on:dragover={dragOver}
