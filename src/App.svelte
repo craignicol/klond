@@ -12,6 +12,7 @@
 	export let foundWords: string[] = [];
 	export let score: number = 0;
 	export let penaltyScore: number = 0;
+	const minLength = 2;
 	let notFound: string = undefined;
 	let notFoundMessage: string = undefined;
 	let dragMessage: string = undefined;
@@ -70,6 +71,14 @@
 				),
 				discard: layout.discard.filter(d => !deck[d.deckPosition].used)
 			};
+			if (
+				deck.filter(c => !c.used).length < minLength ||
+				layout.columns.filter(c => c.length === 0).length +
+					layout.discard.length <
+					minLength
+			) {
+				endGame();
+			}
 		} else {
 			clearSelected();
 			notFound = word;
@@ -263,6 +272,7 @@
 		bind:currentWord={selected}
 		bind:message={notFoundMessage}
 		bind:dragtarget
+		{minLength}
 		on:submit={checkWord}
 		on:clear={clearSelected}
 		on:end={endGame}

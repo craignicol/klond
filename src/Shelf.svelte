@@ -5,7 +5,7 @@
   export let currentWord: LetterCard[];
   export let message: string = undefined;
   export let dragtarget: boolean = false;
-  const minLength = 2;
+  export const minLength = 2;
   const emptyCard: LetterCard = {
     letter: Letter.Q,
     deckPosition: -10,
