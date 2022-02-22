@@ -16,7 +16,7 @@
 	let dragMessage: string = undefined;
 	let layout: Layout = { columns: [[]], discard: [] };
 	let discardIndex: number = 0;
-	const verbose = false;
+	const verbose = true;
 	const genericCard: LetterCard = {
 		letter: Letter.Q,
 		deckPosition: -1,
@@ -209,8 +209,8 @@
 
 	function detectTouchEnd(x1, y1, x2, y2, w, h) {
 		//Very simple detection here
-		if (Math.abs(x2 - x1) > w) return false;
-		if (Math.abs(y2 - y1) > h) return false;
+		if (x2 - x1 > w) return false;
+		if (y2 - y1 > h) return false;
 		return true;
 	}
 </script>
