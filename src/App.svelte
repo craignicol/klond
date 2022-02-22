@@ -319,6 +319,8 @@
 		{#each Array(3 - layout.discard.slice(discardIndex, discardIndex + 3).length) as _}
 			<Card />
 		{/each}
+		<hr />
+		<p>👆 for more cards, {layout.discard.length} in discard pile.</p>
 	</div>
 
 	<div id="results">
@@ -383,7 +385,7 @@
 
 	#results {
 		float: right;
-		margin-top: 2.2rem;
+		margin-top: 3.8rem;
 		text-align: left;
 		background: #f3ac6577;
 		border: 5px solid #ff3e00;
