@@ -28,4 +28,7 @@ test("word score is based on length only", () => {
   expect(Dictionary.wordScore("aaaaaaaaaaa")).toBe(1024);
   expect(Dictionary.wordScore("aaaaaaaaaaaa")).toBe(2048);
   expect(Dictionary.wordScore("aaaaaaaaaaaaa")).toBe(4096);
+  expect(Dictionary.wordScore("aaaaaaaaaaaaaa")).toBe(8192);
+  expect(Dictionary.wordScore("aaaaaaaaaaaaaaa")).toBe(16384);
+  expect(Dictionary.wordScore("aaaaaaaaaaaaaaaa")).toBe(16384); // we've hit max
 });

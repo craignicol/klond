@@ -10,5 +10,5 @@ export function isWord(w: string) : boolean {
 
 export function wordScore(w: string, growth: number = 2) : number {
   if (w.length === 0) { return 0; }
-  return growth ** Math.max(w.length - 1, 11); // Longest word is 10, so let's not penalise too heavily
+  return growth ** Math.min(w.length - 1, 14); // Longest word is 10, so let's not penalise too heavily
 }
