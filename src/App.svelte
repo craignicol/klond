@@ -6,11 +6,20 @@
 	import { isWord, wordScore } from "./dictionary";
 	import Modal from "svelte-simple-modal";
 	import HelpButton from "./HelpButton.svelte";
+	import EndGamePopup from "./EndGamePopup.svelte";
 
 	export let deck: LetterCard[];
 	let selected: LetterCard[] = [];
 	export let foundWords: string[] = [];
+	$: wordLengths = foundWords.map(w => w.split(" : ")[0].length);
+	$: longestWordLength = Math.max(...wordLengths, 0);
+	$: wordsCount = wordLengths.length;
+	$: cardsRemaining = deck.filter(c => !c.used);
+
 	export let score: number = 0;
+	export let penaltyScore: number = undefined;
+	let hasEnded: boolean = false;
+	const minLength = 2;
 	let notFound: string = undefined;
 	let notFoundMessage: string = undefined;
 	let dragMessage: string = undefined;
@@ -30,6 +39,7 @@
 	let activeEvent = "";
 	let originalX = "";
 	let originalY = "";
+	let dragtarget: boolean = false;
 
 	function selectCard(card: LetterCard) {
 		// Or unselect if selected
@@ -68,12 +78,35 @@
 				),
 				discard: layout.discard.filter(d => !deck[d.deckPosition].used)
 			};
+			if (
+				deck.filter(c => !c.used).length < minLength ||
+				layout.columns.filter(c => c.length === 0).length +
+					layout.discard.length <
+					minLength
+			) {
+				endGame();
+			}
 		} else {
-			deck = deck.map(c => (c.selected ? { ...c, selected: false } : c));
-			selected = [];
+			clearSelected();
 			notFound = word;
 			notFoundMessage = notFound + " is not a word";
 		}
+	}
+
+	function clearSelected() {
+		deck = deck.map(c => (c.selected ? { ...c, selected: false } : c));
+		selected = [];
+	}
+
+	function endGame() {
+		penaltyScore = wordScore(
+			deck
+				.filter(c => !c.used)
+				.map(c => c.letter)
+				.join("")
+		);
+		hasEnded = true;
+		notFoundMessage = "Game Over";
 	}
 
 	function dealDiscard() {
@@ -115,6 +148,7 @@
 
 	function dragDrop(e: DragEvent) {
 		dragMessage = "Dropping...";
+		dragtarget = false;
 		// Only handling shelf for now
 		if (e.target instanceof Element && e.target.id === "shelf") {
 			dragMessage = "Dropping on the correct shelf";
@@ -133,11 +167,13 @@
 
 	function dragOver(e: DragEvent) {
 		dragMessage = "Dragging over...";
+		dragtarget = true;
 		return false;
 	}
 
 	function cardDragEnter(e: DragEvent) {
 		dragMessage = "Dragging enter...";
+		dragtarget = true;
 		e.preventDefault();
 		return true;
 	}
@@ -172,6 +208,20 @@
 		targetElement.style.left = pageX;
 		targetElement.style.top = pageY;
 		activeEvent = "move";
+		if (
+			detectTouchEnd(
+				shelf.offsetLeft,
+				shelf.offsetTop,
+				pageX,
+				pageY,
+				shelf.offsetWidth,
+				shelf.offsetHeight
+			)
+		) {
+			dragtarget = true;
+		} else {
+			dragtarget = false;
+		}
 	}
 
 	function handleTouchEnd(e: TouchEvent) {
@@ -204,19 +254,31 @@
 
 			touchedCard = undefined;
 			sourceColumn = undefined;
+			dragtarget = false;
 		}
 	}
 
 	function detectTouchEnd(x1, y1, x2, y2, w, h) {
 		//Very simple detection here
-		if (Math.abs(x2 - x1) > w) return false;
-		if (Math.abs(y2 - y1) > h) return false;
+		if (x2 - x1 > w) return false;
+		if (y2 - y1 > h) return false;
 		return true;
 	}
 </script>
 
 <Modal>
 	<HelpButton />
+</Modal>
+
+<Modal>
+	<EndGamePopup
+		bind:hasEnded
+		bind:score
+		bind:penaltyScore
+		bind:longestWordLength
+		bind:wordsCount
+		bind:cardsRemaining={cardsRemaining.length}
+	/>
 </Modal>
 
 <main>
@@ -228,7 +290,11 @@
 	<Shelf
 		bind:currentWord={selected}
 		bind:message={notFoundMessage}
-		on:click={checkWord}
+		bind:dragtarget
+		{minLength}
+		on:submit={checkWord}
+		on:clear={clearSelected}
+		on:end={endGame}
 		on:drop={dragDrop}
 		on:dragover={dragOver}
 		on:dragenter={cardDragEnter}
@@ -282,6 +348,8 @@
 		{#each Array(3 - layout.discard.slice(discardIndex, discardIndex + 3).length) as _}
 			<Card />
 		{/each}
+		<hr />
+		<p>👆 for more cards, {layout.discard.length} in discard pile.</p>
 	</div>
 
 	<div id="results">
@@ -346,7 +414,7 @@
 
 	#results {
 		float: right;
-		margin-top: 2.2rem;
+		margin-top: 3.8rem;
 		text-align: left;
 		background: #f3ac6577;
 		border: 5px solid #ff3e00;
