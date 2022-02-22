@@ -11,12 +11,13 @@
 	let selected: LetterCard[] = [];
 	export let foundWords: string[] = [];
 	export let score: number = 0;
+	export let penaltyScore: number = 0;
 	let notFound: string = undefined;
 	let notFoundMessage: string = undefined;
 	let dragMessage: string = undefined;
 	let layout: Layout = { columns: [[]], discard: [] };
 	let discardIndex: number = 0;
-	const verbose = true;
+	const verbose = false;
 	const genericCard: LetterCard = {
 		letter: Letter.Q,
 		deckPosition: -1,
@@ -70,11 +71,25 @@
 				discard: layout.discard.filter(d => !deck[d.deckPosition].used)
 			};
 		} else {
-			deck = deck.map(c => (c.selected ? { ...c, selected: false } : c));
-			selected = [];
+			clearSelected();
 			notFound = word;
 			notFoundMessage = notFound + " is not a word";
 		}
+	}
+
+	function clearSelected() {
+		deck = deck.map(c => (c.selected ? { ...c, selected: false } : c));
+		selected = [];
+	}
+
+	function endGame() {
+		penaltyScore = wordScore(
+			deck
+				.filter(c => !c.used)
+				.map(c => c.letter)
+				.join("")
+		);
+		notFoundMessage = "Game Over";
 	}
 
 	function dealDiscard() {
@@ -248,7 +263,9 @@
 		bind:currentWord={selected}
 		bind:message={notFoundMessage}
 		bind:dragtarget
-		on:click={checkWord}
+		on:submit={checkWord}
+		on:clear={clearSelected}
+		on:end={endGame}
 		on:drop={dragDrop}
 		on:dragover={dragOver}
 		on:dragenter={cardDragEnter}

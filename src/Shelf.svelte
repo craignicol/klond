@@ -18,6 +18,18 @@
   export function deselect(letter: LetterCard) {
     dispatch("deselect", letter);
   }
+
+  export function submit() {
+    dispatch("submit");
+  }
+
+  export function clear() {
+    dispatch("clear");
+  }
+
+  export function end() {
+    dispatch("end");
+  }
 </script>
 
 <div
@@ -33,7 +45,11 @@
   on:drop
 >
   {#each currentWord as c}
-    <Card face={c} on:dblclick={_ => deselect(c)} />
+    <Card
+      face={c}
+      on:dblclick={_ => deselect(c)}
+      on:touchstart={_ => deselect(c)}
+    />
   {:else}
     <Card face={emptyCard} turned />
     <span class="shelf-text"
@@ -42,11 +58,13 @@
     >
   {/each}
   {#if currentWord.length >= minLength}
-    <button class="shelf-text" on:click>Submit</button>
+    <button class="shelf-text submit" on:click={submit}>Submit</button>
+    <button class="shelf-text clear" on:click={clear}>Clear</button>
   {:else if currentWord.length > 0}
     <span class="shelf-text">Drag {minLength} or more cards to make a word</span
     >
   {/if}
+  <button class="shelf-text end" on:click={end}>End Game</button>
 </div>
 
 <style>
@@ -66,11 +84,17 @@
     text-align: center;
     margin: 0;
     margin-left: auto;
+    margin-right: 1rem;
     max-width: 80%;
   }
 
   #shelf button.shelf-text {
     background: rgb(21, 59, 33);
     margin-right: 2rem;
+    margin-left: 0;
+  }
+
+  #shelf button.shelf-text.submit {
+    margin-left: auto;
   }
 </style>

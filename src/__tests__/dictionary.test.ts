@@ -14,6 +14,7 @@ test("Nottinghamshire is not in dictionary", () => {
 });
 
 test("word score is based on length only", () => {
+  expect(Dictionary.wordScore("")).toBe(0);
   expect(Dictionary.wordScore("a")).toBe(1);
   expect(Dictionary.wordScore("aa")).toBe(2);
   expect(Dictionary.wordScore("aaa")).toBe(4);
