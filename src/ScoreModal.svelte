@@ -20,8 +20,8 @@
     if (navigator.share) {
       navigator
         .share({
-          title: title,
-          text: message,
+          title: message.replace("<br/>", "\n"),
+          text: message.replace("<br/>", "\n"),
           url: "https://craignicol.github.io/klond/"
         })
         .then(() => console.log("Successful share"))
