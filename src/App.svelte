@@ -374,7 +374,7 @@
 		margin: 0 auto;
 		font-size: 1vw;
 		font-family: "OpenDyslexic3", "OpenDyslexic2", "Dyslexie", "Comic Sans MS",
-			cursive, sans-serif;
+			sans-serif;
 		touch-action: none;
 	}
 
