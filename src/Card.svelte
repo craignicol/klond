@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Letter, LetterCard } from "./deck";
+  import { Letter, LetterCard } from "./deck";
 
   export let face: LetterCard = undefined;
   export let turned: boolean = false;
@@ -9,13 +9,28 @@ import { Letter, LetterCard } from "./deck";
 </script>
 
 {#if face === undefined}
-<span class="card empty" on:click on:dblclick>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
+  <span class="card empty" on:click on:dblclick
+    >{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span
+  >
 {:else if turned && stacked}
-<span class="card back clip" id="card-{face.deckPosition}">&nbsp;</span>
+  <span class="card back clip" id="card-{face.deckPosition}">&nbsp;</span>
 {:else if turned}
-<span class="card back" id="card-{face.deckPosition}" on:click on:dblclick>&nbsp;</span>
+  <span class="card back" id="card-{face.deckPosition}" on:click on:dblclick
+    >&nbsp;</span
+  >
 {:else}
-<span class="card front {selected ? 'selected' : ''}" id="card-{face.deckPosition}" draggable=true on:click on:dblclick on:dragstart on:dragend on:touchstart on:touchmove on:touchend>{Letter[face.letter]}</span>
+  <span
+    class="card front {selected ? 'selected' : ''}"
+    id="card-{face.deckPosition}"
+    draggable="true"
+    on:click
+    on:dblclick
+    on:dragstart
+    on:dragend
+    on:touchstart
+    on:touchmove
+    on:touchend>{Letter[face.letter]}</span
+  >
 {/if}
 
 <style>
@@ -54,13 +69,14 @@ import { Letter, LetterCard } from "./deck";
   }
   span.card.back {
     background: repeating-linear-gradient(
-        45deg,
-        rgba(62, 26, 26, 0.5),
-        rgba(49, 1, 1, 0.5) 1px,
+      45deg,
+      rgba(62, 26, 26, 0.5),
+      rgba(49, 1, 1, 0.5) 1px,
       transparent 1px,
       transparent 3px
-      );
+    );
     z-index: 1;
+    border: rgb(64, 31, 31) solid 0.1em;
   }
   span.card.front {
     background: radial-gradient(

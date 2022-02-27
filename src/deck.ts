@@ -68,7 +68,7 @@ export interface LetterCard {
 }
 export interface Layout {
   columns: LetterCard[][];
-  discard: LetterCard[];
+  stock: LetterCard[];
 }
 
 export function Deal(input_deck: LetterCard[]): Layout {
@@ -81,5 +81,5 @@ export function Deal(input_deck: LetterCard[]): Layout {
   columns.push(deck.splice(0, 3));
   columns.push(deck.splice(0, 2));
   columns.push(deck.splice(0, 1));
-  return {columns, discard: deck};
+  return {columns, stock: deck};
 }
