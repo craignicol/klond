@@ -9,6 +9,7 @@
   export let cardsRemaining: number;
   let finalScore: number = score - penaltyScore;
 
+  const baseUrl = "https://craignicol.github.io/klond/";
   let message: string = `🎉 I just scored ${
     isNaN(finalScore) ? "No" : finalScore
   } points!<br/>
@@ -17,15 +18,23 @@
 ↔ The longest word was ${longestWordLength} letters long.`;
 
   function share(): void {
+    const content = message.replaceAll("<br/>", "");
     if (navigator.share) {
       navigator
         .share({
-          title: message.replace("<br/>", "\n"),
-          text: message.replace("<br/>", "\n"),
-          url: "https://craignicol.github.io/klond/"
+          title: content,
+          text: content,
+          url: baseUrl
         })
         .then(() => console.log("Successful share"))
         .catch(error => console.log("Error sharing", error));
+    } else if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(content + "\n\n" + baseUrl)
+        .then(() => console.log("Successful copy"))
+        .catch(error => console.log("Error copying", error));
+    } else {
+      console.log("No share method available");
     }
   }
 </script>
@@ -37,7 +46,15 @@
       {@html message}
     </p>
     <div class="actions">
-      <button on:click={share}>Share</button>
+      <button
+        disabled={!(navigator.share || navigator.clipboard)}
+        on:click={share}
+        >{navigator.share
+          ? "Share"
+          : navigator.clipboard
+          ? "Copy"
+          : "Cannot Share"}</button
+      >
     </div>
   </div>
 </div>
