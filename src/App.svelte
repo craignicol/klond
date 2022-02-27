@@ -99,12 +99,7 @@
 	}
 
 	function endGame() {
-		penaltyScore = wordScore(
-			deck
-				.filter(c => !c.used)
-				.map(c => c.letter)
-				.join("")
-		);
+		penaltyScore = cardsRemaining.length;
 		hasEnded = true;
 		notFoundMessage = "Game Over";
 	}
