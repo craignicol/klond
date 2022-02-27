@@ -2,6 +2,14 @@
 
 ## **[Play now](./play/)**
 
+## What's New?
+
+- Rename "discard" to "stock" to match Klondike, and reduce confusion.
+- Reduce penalty score for unused cards.
+- Add border to card backs for greater clarity.
+- Fix sharing to remove `<br/>` tags.
+- Replace sharing with "Copy" on browsers that don't support share
+
 ## Frequency Asked Questions
 
 ### What is Klond?
