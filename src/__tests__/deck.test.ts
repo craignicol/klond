@@ -113,7 +113,7 @@ test('Multiple runs are different', () => {
   expect(Shuffle(1)).not.toEqual(Shuffle(2));
 });
 
-test('layout contains 7 columns and discard', () => {
+test('layout contains 7 columns and stock', () => {
   const layout = Deal(Shuffle(1));
   expect(layout.columns.length).toBe(7);
   expect(layout.columns[0].length).toBe(7);
@@ -123,7 +123,7 @@ test('layout contains 7 columns and discard', () => {
   expect(layout.columns[4].length).toBe(3);
   expect(layout.columns[5].length).toBe(2);
   expect(layout.columns[6].length).toBe(1);
-  expect(layout.discard.length).toBe(24);
+  expect(layout.stock.length).toBe(24);
 });
 
 test('deal does not alter deck', () => {

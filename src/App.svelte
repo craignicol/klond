@@ -23,8 +23,8 @@
 	let notFound: string = undefined;
 	let notFoundMessage: string = undefined;
 	let dragMessage: string = undefined;
-	let layout: Layout = { columns: [[]], discard: [] };
-	let discardIndex: number = 0;
+	let layout: Layout = { columns: [[]], stock: [] };
+	let stockIndex: number = 0;
 	const verbose = false;
 	const genericCard: LetterCard = {
 		letter: Letter.Q,
@@ -76,12 +76,12 @@
 				columns: layout.columns.map(col =>
 					col.filter(c => !deck[c.deckPosition].used)
 				),
-				discard: layout.discard.filter(d => !deck[d.deckPosition].used)
+				stock: layout.stock.filter(d => !deck[d.deckPosition].used)
 			};
 			if (
 				deck.filter(c => !c.used).length < minLength ||
 				layout.columns.filter(c => c.length === 0).length +
-					layout.discard.length <
+					layout.stock.length <
 					minLength
 			) {
 				endGame();
@@ -109,11 +109,11 @@
 		notFoundMessage = "Game Over";
 	}
 
-	function dealDiscard() {
+	function dealStock() {
 		if (selected.length === 0) {
-			discardIndex += 3;
-			if (discardIndex >= layout.discard.length) {
-				discardIndex = 0;
+			stockIndex += 3;
+			if (stockIndex >= layout.stock.length) {
+				stockIndex = 0;
 			}
 			notFoundMessage = undefined;
 		} else {
@@ -325,16 +325,16 @@
 		{/each}
 	</div>
 
-	<div class="discard">
-		{#if layout.discard.length > discardIndex + 3}
-			<Card face={genericCard} turned on:click={dealDiscard} />
+	<div class="stock">
+		{#if layout.stock.length > stockIndex + 3}
+			<Card face={genericCard} turned on:click={dealStock} />
 		{:else}
 			<Card
-				emptyText={layout.discard.length > 3 ? "🔄" : "❌"}
-				on:click={dealDiscard}
+				emptyText={layout.stock.length > 3 ? "🔄" : "❌"}
+				on:click={dealStock}
 			/>
 		{/if}
-		{#each layout.discard.slice(discardIndex, discardIndex + 3) as c}
+		{#each layout.stock.slice(stockIndex, stockIndex + 3) as c}
 			<Card
 				face={c}
 				bind:selected={deck[c.deckPosition].selected}
@@ -345,11 +345,11 @@
 				on:touchend={handleTouchEnd}
 			/>
 		{/each}
-		{#each Array(3 - layout.discard.slice(discardIndex, discardIndex + 3).length) as _}
+		{#each Array(3 - layout.stock.slice(stockIndex, stockIndex + 3).length) as _}
 			<Card />
 		{/each}
 		<hr />
-		<p>👆 for more cards, {layout.discard.length} in discard pile.</p>
+		<p>👆 for more cards, {layout.stock.length} in stock pile.</p>
 	</div>
 
 	<div id="results">
@@ -404,7 +404,7 @@
 		float: left;
 	}
 
-	.discard {
+	.stock {
 		float: right;
 		width: auto;
 		height: 12vw;
