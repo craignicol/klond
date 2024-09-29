@@ -23,7 +23,7 @@
     "@types/jest": "^27.4.0",
     "babel-jest": "^27.5.1",
     "jest": "^27.5.1",
-    "rollup": "^2.67.2",
+    "rollup": "^2.79.2",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
