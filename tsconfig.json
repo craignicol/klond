@@ -13,8 +13,10 @@
       ]
     },
     "sourceMap": true,
+    "verbatimModuleSyntax": true,
+    "module": "esnext",
+    "esModuleInterop": true
   },
-  "extends": "@tsconfig/svelte/tsconfig.json",
   "include": [
     "src/**/*",
     "src/tests/**/*"

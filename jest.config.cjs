@@ -1,16 +1,17 @@
 module.exports = {
   preset: 'ts-jest/presets/default-esm',
-  globals: {
-    'ts-jest': {
-      useESM: true,
-    }
-  },
-  moduleNameMapper: {   '^(\\.{1,2}/.*)\\.js$': '$1',},
-  roots: ['<rootDir>/src'],
   transform: {
-    '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
-    '^.+\\.tsx?$': 'ts-jest',
-    "^.+\\.svelte$": ["svelte-jester", { preprocess: true }]
+    '^.+\\.js$': 'babel-jest',
+    '^.+\\.ts$': ['ts-jest', {
+      useESM: true,
+      tsconfig: 'tsconfig.test.json',
+    }],
+    '^.+\\.svelte$': [
+      'svelte-jester',
+      {
+        preprocess: true,
+      },
+    ],
   },
   coverageDirectory: '<rootDir>/coverage',
   testEnvironment: 'jsdom',
