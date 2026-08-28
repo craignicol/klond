@@ -14,7 +14,7 @@
     );
 </script>
 
-<button on:click={showHelp} id="open-help">❓</button>
+<button onclick={showHelp} id="open-help">❓</button>
 
 <style>
   #open-help {

@@ -1,21 +1,34 @@
 <script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import { Letter, LetterCard } from "./deck";
 
-  export let face: LetterCard = undefined;
-  export let turned: boolean = false;
-  export let stacked: boolean = false;
-  export let selected: boolean = false;
-  export let emptyText: string = undefined;
+  interface Props {
+    face?: LetterCard;
+    turned?: boolean;
+    stacked?: boolean;
+    selected?: boolean;
+    emptyText?: string;
+  }
+
+  let {
+    face = undefined,
+    turned = false,
+    stacked = false,
+    selected = false,
+    emptyText = undefined
+  }: Props = $props();
 </script>
 
 {#if face === undefined}
-  <span class="card empty" on:click on:dblclick
+  <span class="card empty" onclick={bubble('click')} ondblclick={bubble('dblclick')}
     >{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span
   >
 {:else if turned && stacked}
   <span class="card back clip" id="card-{face.deckPosition}">&nbsp;</span>
 {:else if turned}
-  <span class="card back" id="card-{face.deckPosition}" on:click on:dblclick
+  <span class="card back" id="card-{face.deckPosition}" onclick={bubble('click')} ondblclick={bubble('dblclick')}
     >&nbsp;</span
   >
 {:else}
@@ -23,13 +36,13 @@
     class="card front {selected ? 'selected' : ''}"
     id="card-{face.deckPosition}"
     draggable="true"
-    on:click
-    on:dblclick
-    on:dragstart
-    on:dragend
-    on:touchstart
-    on:touchmove
-    on:touchend>{Letter[face.letter]}</span
+    onclick={bubble('click')}
+    ondblclick={bubble('dblclick')}
+    ondragstart={bubble('dragstart')}
+    ondragend={bubble('dragend')}
+    ontouchstart={bubble('touchstart')}
+    ontouchmove={bubble('touchmove')}
+    ontouchend={bubble('touchend')}>{Letter[face.letter]}</span
   >
 {/if}
 

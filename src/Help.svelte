@@ -2,7 +2,11 @@
   import { getContext } from "svelte";
   const { close } = getContext("simple-modal");
 
-  export let title: string = "How to Play";
+  interface Props {
+    title?: string;
+  }
+
+  let { title = "How to Play" }: Props = $props();
 </script>
 
 <div role="dialog" class="modal">
@@ -27,7 +31,7 @@
       >
     </p>
     <div class="actions">
-      <button on:click={close}>OK</button>
+      <button onclick={close}>OK</button>
     </div>
   </div>
 </div>

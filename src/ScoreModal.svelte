@@ -1,12 +1,23 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  export let title: string = "Game Over";
 
-  export let score: number;
-  export let penaltyScore: number;
-  export let longestWordLength: number;
-  export let wordsCount: number;
-  export let cardsRemaining: number;
+  interface Props {
+    title?: string;
+    score: number;
+    penaltyScore: number;
+    longestWordLength: number;
+    wordsCount: number;
+    cardsRemaining: number;
+  }
+
+  let {
+    title = "Game Over",
+    score,
+    penaltyScore,
+    longestWordLength,
+    wordsCount,
+    cardsRemaining
+  }: Props = $props();
   let finalScore: number = score - penaltyScore;
 
   const baseUrl = "https://craignicol.github.io/klond/";
@@ -48,7 +59,7 @@
     <div class="actions">
       <button
         disabled={!(navigator.share || navigator.clipboard)}
-        on:click={share}
+        onclick={share}
         >{navigator.share
           ? "Share"
           : navigator.clipboard

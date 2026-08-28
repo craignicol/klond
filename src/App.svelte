@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount } from "svelte";
 	import Card from "./Card.svelte";
 	import { Letter, LetterCard, Deal, Layout } from "./deck";
@@ -8,23 +10,28 @@
 	import HelpButton from "./HelpButton.svelte";
 	import EndGamePopup from "./EndGamePopup.svelte";
 
-	export let deck: LetterCard[];
-	let selected: LetterCard[] = [];
-	export let foundWords: string[] = [];
-	$: wordLengths = foundWords.map(w => w.split(" : ")[0].length);
-	$: longestWordLength = Math.max(...wordLengths, 0);
-	$: wordsCount = wordLengths.length;
-	$: cardsRemaining = deck.filter(c => !c.used);
+	let selected: LetterCard[] = $state([]);
 
-	export let score: number = 0;
-	export let penaltyScore: number = undefined;
-	let hasEnded: boolean = false;
+	interface Props {
+		deck: LetterCard[];
+		foundWords?: string[];
+		score?: number;
+		penaltyScore?: number;
+	}
+
+	let {
+		deck = $bindable(),
+		foundWords = $bindable([]),
+		score = $bindable(0),
+		penaltyScore = $bindable(undefined)
+	}: Props = $props();
+	let hasEnded: boolean = $state(false);
 	const minLength = 2;
-	let notFound: string = undefined;
-	let notFoundMessage: string = undefined;
-	let dragMessage: string = undefined;
-	let layout: Layout = { columns: [[]], stock: [] };
-	let stockIndex: number = 0;
+	let notFound: string = $state(undefined);
+	let notFoundMessage: string = $state(undefined);
+	let dragMessage: string = $state(undefined);
+	let layout: Layout = $state({ columns: [[]], stock: [] });
+	let stockIndex: number = $state(0);
 	const verbose = false;
 	const genericCard: LetterCard = {
 		letter: Letter.Q,
@@ -39,7 +46,7 @@
 	let activeEvent = "";
 	let originalX = "";
 	let originalY = "";
-	let dragtarget: boolean = false;
+	let dragtarget: boolean = $state(false);
 
 	function selectCard(card: LetterCard) {
 		// Or unselect if selected
@@ -259,6 +266,16 @@
 		if (y2 - y1 > h) return false;
 		return true;
 	}
+	let wordLengths = $derived(foundWords.map(w => w.split(" : ")[0].length));
+	let longestWordLength;
+	run(() => {
+		longestWordLength = Math.max(...wordLengths, 0);
+	});
+	let wordsCount;
+	run(() => {
+		wordsCount = wordLengths.length;
+	});
+	let cardsRemaining = $derived(deck.filter(c => !c.used));
 </script>
 
 <Modal>

@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Event attribute must be a JavaScript expression, not a string -->
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Card from "./Card.svelte";
@@ -10,7 +11,7 @@
     letter: Letter.Q,
     deckPosition: -10,
     selected: false,
-    used: false
+    used: false,
   };
 
   const dispatch = createEventDispatcher();
@@ -34,9 +35,8 @@
 
 <div
   id="shelf"
-  ondragover="return false"
   class={dragtarget ? "dragtarget" : ""}
-  on:dragover
+  on:dragover|preventDefault
   on:dragstart
   on:dragenter
   on:dragend
@@ -47,8 +47,8 @@
   {#each currentWord as c}
     <Card
       face={c}
-      on:dblclick={_ => deselect(c)}
-      on:touchstart={_ => deselect(c)}
+      on:dblclick={(_) => deselect(c)}
+      on:touchstart={(_) => deselect(c)}
     />
   {:else}
     <Card face={emptyCard} turned />
