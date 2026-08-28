@@ -82,12 +82,9 @@
   }
   div.card.back.clip:not(:last-child) {
     height: 1em;
-    opacity: 0.1;
-    margin-left: -3vw;
-    max-width: 3rem;
-    margin-top: 1em;
+    max-width: 5rem;
   }
-  button.card.back {
+  div.card.back, button.card.back {
     background: repeating-linear-gradient(
       45deg,
       rgb(165, 30, 30),

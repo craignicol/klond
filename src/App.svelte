@@ -397,7 +397,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		min-width: 8vw;
+		min-width: 4vw;
 		min-height: 20rem;
 	}
 
