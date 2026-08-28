@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "sirv-cli": "^2.0.0",
-    "svelte-simple-modal": "^1.6.2"
+    "svelte-simple-modal": "^2.0.0"
   }
 }
