@@ -394,16 +394,42 @@
 
 	.column {
 		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 8vw;
+		min-height: 20rem;
+	}
+
+	.column :global(button.card),
+	.column :global(div.card) {
+		margin-top: -2.5rem;
+		margin-bottom: 0;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.column :global(button.card):first-child,
+	.column :global(div.card):first-child {
+		margin-top: 0;
+	}
+
+	.column :global(button.card.selected) {
+		opacity: 0.2;
+		z-index: auto;
 	}
 
 	.row {
 		display: flex;
 		flex-direction: row;
 		margin: 0 auto;
-		height: 40vw;
-		width: 50vw;
-		max-width: 25rem;
-		float: left;
+		height: auto;
+		width: 95%;
+		max-width: 60rem;
+		gap: 1rem;
+		justify-content: center;
+		flex-wrap: wrap;
+		float: none;
 	}
 
 	.stock {
