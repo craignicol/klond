@@ -91,6 +91,7 @@
   {#each currentWord as c}
     <Card
       face={c}
+      selected={true}
       ondblclick={(_) => deselect(c)}
       ontouchstart={(_) => deselect(c)}
     />
@@ -118,6 +119,11 @@
     justify-content: center;
     background: linear-gradient(#c1bebe, #545656);
     border-bottom: 5px solid rgb(15, 15, 15);
+    position: relative;
+  }
+  #shelf :global(button.card),
+  #shelf :global(div.card) {
+    z-index: 1;
   }
   #shelf.dragtarget {
     border: 5px solid rgb(15, 15, 15);
