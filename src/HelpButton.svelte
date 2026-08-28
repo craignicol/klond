@@ -13,8 +13,19 @@
 <button onclick={showHelp} id="open-help">❓</button>
 
 {#if open}
-  <div class="modal-backdrop" onclick={closeHelp}>
-    <div class="modal-content" onclick={event => event.stopPropagation()}>
+  <div
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    onclick={closeHelp}
+    onkeydown={event => event.key === "Escape" && closeHelp()}
+    tabindex="0"
+  >
+    <div
+      class="modal-content"
+      role="presentation"
+      onclick={event => event.stopPropagation()}
+    >
       <Help title="How to Play" onClose={closeHelp} />
     </div>
   </div>

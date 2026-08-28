@@ -18,15 +18,15 @@
     wordsCount,
     cardsRemaining
   }: Props = $props();
-  let finalScore: number = score - penaltyScore;
+  let finalScore = $derived(score - penaltyScore);
 
   const baseUrl = "https://craignicol.github.io/klond/";
-  let message: string = `🎉 I just scored ${
+  let message = $derived(`🎉 I just scored ${
     isNaN(finalScore) ? "No" : finalScore
   } points!<br/>
 🃏 I had ${cardsRemaining} cards remaining.<br/>
 📖 I had ${wordsCount} words.<br/>
-↔ The longest word was ${longestWordLength} letters long.`;
+↔ The longest word was ${longestWordLength} letters long.`);
 
   function share(): void {
     const content = message.replaceAll("<br/>", "");

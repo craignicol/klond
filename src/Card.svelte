@@ -33,15 +33,16 @@
 </script>
 
 {#if face === undefined}
-  <span class="card empty" {onclick} {ondblclick}>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
+  <button class="card empty" {onclick} {ondblclick}>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</button>
 {:else if turned && stacked}
-  <span class="card back clip" id="card-{face.deckPosition}">&nbsp;</span>
+  <div class="card back clip" id="card-{face.deckPosition}" role="presentation">&nbsp;</div>
 {:else if turned}
-  <span class="card back" id="card-{face.deckPosition}" {onclick} {ondblclick}>&nbsp;</span>
+  <button class="card back" id="card-{face.deckPosition}" aria-label="Card" {onclick} {ondblclick}>&nbsp;</button>
 {:else}
-  <span
+  <button
     class="card front {selected ? 'selected' : ''}"
     id="card-{face.deckPosition}"
+    aria-label="Card {Letter[face.letter]}"
     draggable="true"
     {onclick}
     {ondblclick}
@@ -49,11 +50,11 @@
     {ondragend}
     {ontouchstart}
     {ontouchmove}
-    {ontouchend}>{Letter[face.letter]}</span>
+    {ontouchend}>{Letter[face.letter]}</button>
 {/if}
 
 <style>
-  span.card {
+  button.card, div.card {
     display: inline-block;
     width: 6vw;
     height: 10vw;
@@ -71,42 +72,38 @@
     text-align: center;
     line-height: 3em;
     border-radius: 1.5vw;
+    border: none;
+    cursor: pointer;
   }
-  span.card.empty {
+  button.card.empty {
     background: white;
     color: black;
     border: dotted black;
   }
-
-  span.card.back.clip:not(:last-child) {
+  div.card.back.clip:not(:last-child) {
     height: 1em;
-    border-bottom: 0;
-    border-radius: 1.5vw 1.5vw 0 0;
-    line-height: 0;
-    margin: 0;
-    padding: 0;
+    opacity: 0.1;
+    margin-left: -3vw;
+    max-width: 3rem;
+    margin-top: 1em;
   }
-  span.card.back {
+  button.card.back {
     background: repeating-linear-gradient(
       45deg,
-      rgba(62, 26, 26, 0.5),
-      rgba(49, 1, 1, 0.5) 1px,
-      transparent 1px,
-      transparent 3px
+      rgb(165, 30, 30),
+      rgb(165, 30, 30) 10px,
+      rgb(100, 15, 15) 10px,
+      rgb(100, 15, 15) 20px
     );
-    z-index: 1;
-    border: rgb(64, 31, 31) solid 0.1em;
   }
-  span.card.front {
+  button.card.front {
     background: radial-gradient(
       circle,
-      rgba(64, 33, 33) 0%,
-      rgb(64, 31, 31) 80%,
-      rgba(228, 129, 129) 100%
+      rgb(165, 30, 30) 0%,
+      rgb(100, 15, 15) 100%
     );
-    z-index: 1;
   }
-  span.card.selected {
+  button.card.selected {
     opacity: 0.2;
   }
 </style>

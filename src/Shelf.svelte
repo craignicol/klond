@@ -36,14 +36,14 @@
     onsubmit,
     onclear,
     onend,
-    ondeselect
+    ondeselect,
   }: Props = $props();
 
   const emptyCard: LetterCard = {
     letter: Letter.Q,
     deckPosition: -10,
     selected: false,
-    used: false
+    used: false,
   };
 
   const dispatch = createEventDispatcher();
@@ -71,23 +71,29 @@
 
 <div
   id="shelf"
+  role="region"
+  aria-label="Drop zone for word building"
   class={dragtarget ? "dragtarget" : ""}
   ondragover={(event) => {
     event.preventDefault();
     ondragover?.(event);
   }}
-  ondragstart={ondragstart}
-  ondragenter={ondragenter}
-  ondragend={ondragend}
-  ontouchstart={ontouchstart}
-  ontouchend={ontouchend}
+  {ondragstart}
+  {ondragenter}
+  {ondragend}
+  {ontouchstart}
+  {ontouchend}
   ondrop={(event) => {
     event.preventDefault();
     ondrop?.(event);
   }}
 >
   {#each currentWord as c}
-    <Card face={c} ondblclick={_ => deselect(c)} ontouchstart={_ => deselect(c)} />
+    <Card
+      face={c}
+      ondblclick={(_) => deselect(c)}
+      ontouchstart={(_) => deselect(c)}
+    />
   {:else}
     <Card face={emptyCard} turned />
     <span class="shelf-text"
