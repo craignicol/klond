@@ -57,7 +57,8 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte', 'svelte/transition', 'svelte/internal']
+			dedupe: ['svelte', 'svelte/transition', 'svelte/internal'],
+			exportConditions: ['browser']
 		}),
 		commonjs(),
 		typescript({
