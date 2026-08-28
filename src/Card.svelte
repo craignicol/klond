@@ -1,8 +1,5 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
-
-  const bubble = createBubbler();
-  import { Letter, LetterCard } from "./deck";
+  import { Letter, type LetterCard } from "./deck";
 
   interface Props {
     face?: LetterCard;
@@ -10,40 +7,49 @@
     stacked?: boolean;
     selected?: boolean;
     emptyText?: string;
+    onclick?: (event: MouseEvent) => void;
+    ondblclick?: (event: MouseEvent) => void;
+    ondragstart?: (event: DragEvent) => void;
+    ondragend?: (event: DragEvent) => void;
+    ontouchstart?: (event: TouchEvent) => void;
+    ontouchmove?: (event: TouchEvent) => void;
+    ontouchend?: (event: TouchEvent) => void;
   }
 
   let {
     face = undefined,
     turned = false,
     stacked = false,
-    selected = false,
-    emptyText = undefined
+    selected = $bindable(false),
+    emptyText = undefined,
+    onclick,
+    ondblclick,
+    ondragstart,
+    ondragend,
+    ontouchstart,
+    ontouchmove,
+    ontouchend
   }: Props = $props();
 </script>
 
 {#if face === undefined}
-  <span class="card empty" onclick={bubble('click')} ondblclick={bubble('dblclick')}
-    >{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span
-  >
+  <span class="card empty" {onclick} {ondblclick}>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</span>
 {:else if turned && stacked}
   <span class="card back clip" id="card-{face.deckPosition}">&nbsp;</span>
 {:else if turned}
-  <span class="card back" id="card-{face.deckPosition}" onclick={bubble('click')} ondblclick={bubble('dblclick')}
-    >&nbsp;</span
-  >
+  <span class="card back" id="card-{face.deckPosition}" {onclick} {ondblclick}>&nbsp;</span>
 {:else}
   <span
     class="card front {selected ? 'selected' : ''}"
     id="card-{face.deckPosition}"
     draggable="true"
-    onclick={bubble('click')}
-    ondblclick={bubble('dblclick')}
-    ondragstart={bubble('dragstart')}
-    ondragend={bubble('dragend')}
-    ontouchstart={bubble('touchstart')}
-    ontouchmove={bubble('touchmove')}
-    ontouchend={bubble('touchend')}>{Letter[face.letter]}</span
-  >
+    {onclick}
+    {ondblclick}
+    {ondragstart}
+    {ondragend}
+    {ontouchstart}
+    {ontouchmove}
+    {ontouchend}>{Letter[face.letter]}</span>
 {/if}
 
 <style>

@@ -1,66 +1,104 @@
-<!-- @migration-task Error while migrating Svelte code: Event attribute must be a JavaScript expression, not a string -->
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Card from "./Card.svelte";
-  import { Letter, LetterCard } from "./deck";
-  export let currentWord: LetterCard[];
-  export let message: string = undefined;
-  export let dragtarget: boolean = false;
-  export let minLength = 2;
+  import { Letter, type LetterCard } from "./deck";
+
+  interface Props {
+    currentWord?: LetterCard[];
+    message?: string;
+    dragtarget?: boolean;
+    minLength?: number;
+    ondrop?: (event: DragEvent) => void | boolean;
+    ondragover?: (event: DragEvent) => void | boolean;
+    ondragenter?: (event: DragEvent) => void | boolean;
+    ondragstart?: (event: DragEvent) => void;
+    ondragend?: (event: DragEvent) => void;
+    ontouchstart?: (event: TouchEvent) => void;
+    ontouchend?: (event: TouchEvent) => void;
+    onsubmit?: () => void;
+    onclear?: () => void;
+    onend?: () => void;
+    ondeselect?: (event: CustomEvent<LetterCard>) => void;
+  }
+
+  let {
+    currentWord = $bindable([]),
+    message = $bindable(undefined),
+    dragtarget = $bindable(false),
+    minLength = 2,
+    ondrop,
+    ondragover,
+    ondragenter,
+    ondragstart,
+    ondragend,
+    ontouchstart,
+    ontouchend,
+    onsubmit,
+    onclear,
+    onend,
+    ondeselect
+  }: Props = $props();
+
   const emptyCard: LetterCard = {
     letter: Letter.Q,
     deckPosition: -10,
     selected: false,
-    used: false,
+    used: false
   };
 
   const dispatch = createEventDispatcher();
 
-  export function deselect(letter: LetterCard) {
+  function deselect(letter: LetterCard) {
     dispatch("deselect", letter);
+    ondeselect?.(new CustomEvent("deselect", { detail: letter }));
   }
 
-  export function submit() {
+  function submit() {
     dispatch("submit");
+    onsubmit?.();
   }
 
-  export function clear() {
+  function clear() {
     dispatch("clear");
+    onclear?.();
   }
 
-  export function end() {
+  function end() {
     dispatch("end");
+    onend?.();
   }
 </script>
 
 <div
   id="shelf"
   class={dragtarget ? "dragtarget" : ""}
-  on:dragover|preventDefault
-  on:dragstart
-  on:dragenter
-  on:dragend
-  on:touchstart
-  on:touchend
-  on:drop
+  ondragover={(event) => {
+    event.preventDefault();
+    ondragover?.(event);
+  }}
+  ondragstart={ondragstart}
+  ondragenter={ondragenter}
+  ondragend={ondragend}
+  ontouchstart={ontouchstart}
+  ontouchend={ontouchend}
+  ondrop={(event) => {
+    event.preventDefault();
+    ondrop?.(event);
+  }}
 >
   {#each currentWord as c}
-    <Card
-      face={c}
-      on:dblclick={(_) => deselect(c)}
-      on:touchstart={(_) => deselect(c)}
-    />
+    <Card face={c} ondblclick={_ => deselect(c)} ontouchstart={_ => deselect(c)} />
   {:else}
     <Card face={emptyCard} turned />
     <span class="shelf-text"
       >{#if message}{message}{:else}Double-click or drag cards here to make
         words.{/if}</span
     >
-    <button class="shelf-text end" on:click={end}>End Game</button>
+    <button class="shelf-text end" onclick={end}>End Game</button>
   {/each}
   {#if currentWord.length >= minLength}
-    <button class="shelf-text submit" on:click={submit}>Submit</button>
-    <button class="shelf-text clear" on:click={clear}>Clear</button>
+    <button class="shelf-text submit" onclick={submit}>Submit</button>
+    <button class="shelf-text clear" onclick={clear}>Clear</button>
   {:else if currentWord.length > 0}
     <span class="shelf-text">Drag {minLength} or more cards to make a word</span
     >

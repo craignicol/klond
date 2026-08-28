@@ -1,5 +1,5 @@
-const sveltePreprocess = require("svelte-preprocess");
+import preprocess from "svelte-preprocess";
 
-module.exports = {
-  preprocess: sveltePreprocess(),
+export default {
+  preprocess: preprocess(),
 };

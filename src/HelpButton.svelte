@@ -1,20 +1,24 @@
 <script lang="ts">
-  import { getContext, getAllContexts } from "svelte";
   import Help from "./Help.svelte";
-  const x = getAllContexts();
-  const { open } = getContext("simple-modal");
-  const showHelp = () =>
-    open(
-      Help,
-      {
-        title: "Help",
-        content: "This is a help message"
-      },
-      { closeButton: false }
-    );
+
+  let open = $state(false);
+  const showHelp = () => {
+    open = true;
+  };
+  const closeHelp = () => {
+    open = false;
+  };
 </script>
 
 <button onclick={showHelp} id="open-help">❓</button>
+
+{#if open}
+  <div class="modal-backdrop" onclick={closeHelp}>
+    <div class="modal-content" onclick={event => event.stopPropagation()}>
+      <Help title="How to Play" onClose={closeHelp} />
+    </div>
+  </div>
+{/if}
 
 <style>
   #open-help {
@@ -24,5 +28,24 @@
     font-size: 2rem;
     color: #ff3e00;
     cursor: help;
+    z-index: 10;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+  }
+
+  .modal-content {
+    background: white;
+    border-radius: 8px;
+    max-width: 560px;
+    width: min(90vw, 560px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
   }
 </style>

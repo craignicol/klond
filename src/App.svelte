@@ -1,16 +1,14 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { onMount } from "svelte";
 	import Card from "./Card.svelte";
-	import { Letter, LetterCard, Deal, Layout } from "./deck";
+	import { Letter, type LetterCard, Deal, type Layout } from "./deck";
 	import Shelf from "./Shelf.svelte";
 	import { isWord, wordScore } from "./dictionary";
-	import Modal from "svelte-simple-modal";
 	import HelpButton from "./HelpButton.svelte";
 	import EndGamePopup from "./EndGamePopup.svelte";
 
-	let selected: LetterCard[] = $state([]);
+	let selected: LetterCard[] = $state([]);
+
 
 	interface Props {
 		deck: LetterCard[];
@@ -267,31 +265,23 @@
 		return true;
 	}
 	let wordLengths = $derived(foundWords.map(w => w.split(" : ")[0].length));
-	let longestWordLength;
-	run(() => {
-		longestWordLength = Math.max(...wordLengths, 0);
-	});
-	let wordsCount;
-	run(() => {
-		wordsCount = wordLengths.length;
-	});
+	let longestWordLength = $derived(Math.max(...wordLengths, 0));
+	let wordsCount = $derived(wordLengths.length);
 	let cardsRemaining = $derived(deck.filter(c => !c.used));
 </script>
 
-<Modal>
-	<HelpButton />
-</Modal>
+<HelpButton />
 
-<Modal>
+{#if hasEnded}
 	<EndGamePopup
-		bind:hasEnded
-		bind:score
-		bind:penaltyScore
-		bind:longestWordLength
-		bind:wordsCount
-		bind:cardsRemaining={cardsRemaining.length}
+		hasEnded={hasEnded}
+		score={score}
+		penaltyScore={penaltyScore}
+		longestWordLength={longestWordLength}
+		wordsCount={wordsCount}
+		cardsRemaining={cardsRemaining.length}
 	/>
-</Modal>
+{/if}
 
 <main>
 	<h1>Klond</h1>
@@ -304,12 +294,12 @@
 		bind:message={notFoundMessage}
 		bind:dragtarget
 		{minLength}
-		on:submit={checkWord}
-		on:clear={clearSelected}
-		on:end={endGame}
-		on:drop={dragDrop}
-		on:dragover={dragOver}
-		on:dragenter={cardDragEnter}
+		onsubmit={checkWord}
+		onclear={clearSelected}
+		onend={endGame}
+		ondrop={dragDrop}
+		ondragover={dragOver}
+		ondragenter={cardDragEnter}
 		on:deselect={event => selectCard(event.detail)}
 	/>
 
@@ -324,11 +314,11 @@
 						turned={i < column.length - 1}
 						stacked
 						bind:selected={deck[c.deckPosition].selected}
-						on:dblclick={_ => selectCard(c)}
-						on:dragstart={e => startDrag(e, c, columnIdx)}
-						on:touchstart={e => handleTouchStart(e, c, columnIdx)}
-						on:touchmove={handleTouchMove}
-						on:touchend={handleTouchEnd}
+						ondblclick={_ => selectCard(c)}
+						ondragstart={e => startDrag(e, c, columnIdx)}
+						ontouchstart={e => handleTouchStart(e, c, columnIdx)}
+						ontouchmove={handleTouchMove}
+						ontouchend={handleTouchEnd}
 					/>
 				{:else}
 					<Card />
@@ -339,22 +329,22 @@
 
 	<div class="stock">
 		{#if layout.stock.length > stockIndex + 3}
-			<Card face={genericCard} turned on:click={dealStock} />
+			<Card face={genericCard} turned onclick={dealStock} />
 		{:else}
 			<Card
 				emptyText={layout.stock.length > 3 ? "🔄" : "❌"}
-				on:click={dealStock}
+				onclick={dealStock}
 			/>
 		{/if}
 		{#each layout.stock.slice(stockIndex, stockIndex + 3) as c}
 			<Card
 				face={c}
 				bind:selected={deck[c.deckPosition].selected}
-				on:dblclick={_ => selectCard(c)}
-				on:dragstart={e => startDrag(e, c, -1)}
-				on:touchstart={e => handleTouchStart(e, c, -1)}
-				on:touchmove={handleTouchMove}
-				on:touchend={handleTouchEnd}
+				ondblclick={_ => selectCard(c)}
+				ondragstart={e => startDrag(e, c, -1)}
+				ontouchstart={e => handleTouchStart(e, c, -1)}
+				ontouchmove={handleTouchMove}
+				ontouchend={handleTouchEnd}
 			/>
 		{/each}
 		{#each Array(3 - layout.stock.slice(stockIndex, stockIndex + 3).length) as _}

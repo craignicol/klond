@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { getContext } from "svelte";
-  const { close } = getContext("simple-modal");
-
   interface Props {
     title?: string;
+    onClose?: () => void;
   }
 
-  let { title = "How to Play" }: Props = $props();
+  let { title = "How to Play", onClose }: Props = $props();
 </script>
 
 <div role="dialog" class="modal">
@@ -31,7 +29,7 @@
       >
     </p>
     <div class="actions">
-      <button onclick={close}>OK</button>
+      <button onclick={onClose}>OK</button>
     </div>
   </div>
 </div>
