@@ -9,7 +9,6 @@
 
 	let selected: LetterCard[] = $state([]);
 
-
 	interface Props {
 		deck: LetterCard[];
 		foundWords?: string[];
@@ -21,7 +20,7 @@
 		deck = $bindable(),
 		foundWords = $bindable([]),
 		score = $bindable(0),
-		penaltyScore = $bindable(undefined)
+		penaltyScore = $bindable(undefined),
 	}: Props = $props();
 	let hasEnded: boolean = $state(false);
 	const minLength = 2;
@@ -35,7 +34,7 @@
 		letter: Letter.Q,
 		deckPosition: -1,
 		selected: false,
-		used: false
+		used: false,
 	};
 
 	let shelf: HTMLElement;
@@ -53,39 +52,41 @@
 			return;
 		}
 		if (deck[card.deckPosition].selected) {
-			selected = selected.filter(c => c.deckPosition !== card.deckPosition);
+			selected = selected.filter(
+				(c) => c.deckPosition !== card.deckPosition,
+			);
 			deck = deck.map((c, i) =>
-				i === card.deckPosition ? { ...c, selected: false } : c
+				i === card.deckPosition ? { ...c, selected: false } : c,
 			);
 		} else {
 			notFoundMessage = undefined;
 			selected = [...selected, { ...card, selected: true }];
 			deck = deck.map((c, i) =>
-				i === card.deckPosition ? { ...c, selected: true } : c
+				i === card.deckPosition ? { ...c, selected: true } : c,
 			);
 		}
 	}
 
 	function checkWord() {
-		const word = selected.map(s => Letter[s.letter]).join("");
+		const word = selected.map((s) => Letter[s.letter]).join("");
 		if (isWord(word)) {
 			const nextScore = wordScore(word);
 			foundWords = [...foundWords, word + " : " + nextScore.toString()];
 			score += nextScore;
 			selected = [];
 			notFound = undefined;
-			deck = deck.map(c =>
-				c.selected ? { ...c, selected: false, used: true } : c
+			deck = deck.map((c) =>
+				c.selected ? { ...c, selected: false, used: true } : c,
 			);
 			layout = {
-				columns: layout.columns.map(col =>
-					col.filter(c => !deck[c.deckPosition].used)
+				columns: layout.columns.map((col) =>
+					col.filter((c) => !deck[c.deckPosition].used),
 				),
-				stock: layout.stock.filter(d => !deck[d.deckPosition].used)
+				stock: layout.stock.filter((d) => !deck[d.deckPosition].used),
 			};
 			if (
-				deck.filter(c => !c.used).length < minLength ||
-				layout.columns.filter(c => c.length === 0).length +
+				deck.filter((c) => !c.used).length < minLength ||
+				layout.columns.filter((c) => c.length === 0).length +
 					layout.stock.length <
 					minLength
 			) {
@@ -99,7 +100,7 @@
 	}
 
 	function clearSelected() {
-		deck = deck.map(c => (c.selected ? { ...c, selected: false } : c));
+		deck = deck.map((c) => (c.selected ? { ...c, selected: false } : c));
 		selected = [];
 	}
 
@@ -130,7 +131,7 @@
 		node.scrollIntoView({
 			behavior: "smooth",
 			block: "center",
-			inline: "center"
+			inline: "center",
 		});
 	};
 
@@ -181,7 +182,7 @@
 	function handleTouchStart(
 		e: TouchEvent,
 		card: LetterCard,
-		columnidx: number
+		columnidx: number,
 	) {
 		dragMessage =
 			"Touch start with card " +
@@ -215,7 +216,7 @@
 				pageX,
 				pageY,
 				shelf.offsetWidth,
-				shelf.offsetHeight
+				shelf.offsetHeight,
 			)
 		) {
 			dragtarget = true;
@@ -238,13 +239,15 @@
 					pageX,
 					pageY,
 					shelf.offsetWidth,
-					shelf.offsetHeight
+					shelf.offsetHeight,
 				)
 			) {
 				selectCard(touchedCard);
 				targetElement.style.position = "initial";
 				dragMessage =
-					"You dropped " + targetElement.getAttribute("id") + " into drop zone";
+					"You dropped " +
+					targetElement.getAttribute("id") +
+					" into drop zone";
 			} else {
 				targetElement.style.left = originalX;
 				targetElement.style.top = originalY;
@@ -264,21 +267,21 @@
 		if (y2 - y1 > h) return false;
 		return true;
 	}
-	let wordLengths = $derived(foundWords.map(w => w.split(" : ")[0].length));
+	let wordLengths = $derived(foundWords.map((w) => w.split(" : ")[0].length));
 	let longestWordLength = $derived(Math.max(...wordLengths, 0));
 	let wordsCount = $derived(wordLengths.length);
-	let cardsRemaining = $derived(deck.filter(c => !c.used));
+	let cardsRemaining = $derived(deck.filter((c) => !c.used));
 </script>
 
 <HelpButton />
 
 {#if hasEnded}
 	<EndGamePopup
-		hasEnded={hasEnded}
-		score={score}
-		penaltyScore={penaltyScore}
-		longestWordLength={longestWordLength}
-		wordsCount={wordsCount}
+		{hasEnded}
+		{score}
+		{penaltyScore}
+		{longestWordLength}
+		{wordsCount}
 		cardsRemaining={cardsRemaining.length}
 	/>
 {/if}
@@ -300,7 +303,7 @@
 		ondrop={dragDrop}
 		ondragover={dragOver}
 		ondragenter={cardDragEnter}
-		on:deselect={event => selectCard(event.detail)}
+		on:deselect={(event) => selectCard(event.detail)}
 	/>
 
 	<hr />
@@ -314,9 +317,9 @@
 						turned={i < column.length - 1}
 						stacked
 						bind:selected={deck[c.deckPosition].selected}
-						ondblclick={_ => selectCard(c)}
-						ondragstart={e => startDrag(e, c, columnIdx)}
-						ontouchstart={e => handleTouchStart(e, c, columnIdx)}
+						ondblclick={(_) => selectCard(c)}
+						ondragstart={(e) => startDrag(e, c, columnIdx)}
+						ontouchstart={(e) => handleTouchStart(e, c, columnIdx)}
 						ontouchmove={handleTouchMove}
 						ontouchend={handleTouchEnd}
 					/>
@@ -340,9 +343,9 @@
 			<Card
 				face={c}
 				bind:selected={deck[c.deckPosition].selected}
-				ondblclick={_ => selectCard(c)}
-				ondragstart={e => startDrag(e, c, -1)}
-				ontouchstart={e => handleTouchStart(e, c, -1)}
+				ondblclick={(_) => selectCard(c)}
+				ondragstart={(e) => startDrag(e, c, -1)}
+				ontouchstart={(e) => handleTouchStart(e, c, -1)}
 				ontouchmove={handleTouchMove}
 				ontouchend={handleTouchEnd}
 			/>
@@ -375,8 +378,8 @@
 		max-width: 95%;
 		margin: 0 auto;
 		font-size: 1vw;
-		font-family: "OpenDyslexic3", "OpenDyslexic2", "Dyslexie", "Comic Sans MS",
-			sans-serif;
+		font-family: "OpenDyslexic3", "OpenDyslexic2", "Dyslexie",
+			"Comic Sans MS", sans-serif;
 		touch-action: none;
 	}
 
@@ -423,13 +426,13 @@
 		display: flex;
 		flex-direction: row;
 		margin: 0 auto;
-		height: auto;
-		width: 95%;
-		max-width: 60rem;
+		height: 40vw;
+		width: 50vw;
+		max-width: 25rem;
 		gap: 1rem;
 		justify-content: center;
 		flex-wrap: wrap;
-		float: none;
+		float: left;
 	}
 
 	.stock {

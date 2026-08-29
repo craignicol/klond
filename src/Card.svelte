@@ -28,16 +28,26 @@
     ondragend,
     ontouchstart,
     ontouchmove,
-    ontouchend
+    ontouchend,
   }: Props = $props();
 </script>
 
 {#if face === undefined}
-  <button class="card empty" {onclick} {ondblclick}>{#if emptyText}{emptyText}{:else}&nbsp;{/if}</button>
+  <button class="card empty" {onclick} {ondblclick}
+    >{#if emptyText}{emptyText}{:else}&nbsp;{/if}</button
+  >
 {:else if turned && stacked}
-  <div class="card back clip" id="card-{face.deckPosition}" role="presentation">&nbsp;</div>
+  <div class="card back clip" id="card-{face.deckPosition}" role="presentation">
+    &nbsp;
+  </div>
 {:else if turned}
-  <button class="card back" id="card-{face.deckPosition}" aria-label="Card" {onclick} {ondblclick}>&nbsp;</button>
+  <button
+    class="card back"
+    id="card-{face.deckPosition}"
+    aria-label="Card"
+    {onclick}
+    {ondblclick}>&nbsp;</button
+  >
 {:else}
   <button
     class="card front {selected ? 'selected' : ''}"
@@ -50,11 +60,13 @@
     {ondragend}
     {ontouchstart}
     {ontouchmove}
-    {ontouchend}>{Letter[face.letter]}</button>
+    {ontouchend}>{Letter[face.letter]}</button
+  >
 {/if}
 
 <style>
-  button.card, div.card {
+  button.card,
+  div.card {
     display: inline-block;
     width: 6vw;
     height: 10vw;
@@ -82,15 +94,20 @@
   }
   div.card.back.clip:not(:last-child) {
     height: 1em;
-    max-width: 5rem;
+    border-bottom: 0;
+    border-radius: 1.5vw 1.5vw 0 0;
+    line-height: 0;
+    margin: 0;
+    padding: 0;
   }
-  div.card.back, button.card.back {
+  div.card.back,
+  button.card.back {
     background: repeating-linear-gradient(
       45deg,
-      rgb(165, 30, 30),
-      rgb(165, 30, 30) 10px,
-      rgb(100, 15, 15) 10px,
-      rgb(100, 15, 15) 20px
+      rgb(62, 26, 26, 0.5),
+      rgb(49, 1, 1, 0.5) 1px,
+      transparent 1px,
+      transparent 4px
     );
   }
   button.card.front {
